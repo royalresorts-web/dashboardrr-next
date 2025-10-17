@@ -5,7 +5,7 @@ import { onAuthStateChanged, User, signOut as authSignOut } from 'firebase/auth'
 import { auth } from '../../firebaseConfig'; // Asegúrate de que la ruta sea correcta
 
 // 1. Definimos el tipo para nuestro objeto de usuario simplificado
-interface UserType {
+export interface UserType {
   uid: string;
   email: string | null;
   photoURL: string | null;
