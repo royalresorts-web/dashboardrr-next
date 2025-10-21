@@ -1,4 +1,5 @@
-import { getPermissionsResType } from "@/Context/UserConfig";
+import { certificateInfoType, certificateType, fetchCertificatesResponseType } from "@/Components/disclaimer/dataset";
+import { getPermissionsResType } from "@/Context/UserContext";
 
 export function getPermissions(){
 }
@@ -16,7 +17,7 @@ export function fetchUserPermissions(
     body: data,
   })
     .then((res) => res.json())
-    .then((response: getPermissionsResType) => {        
+    .then((response: getPermissionsResType) => {
       if (response.code === "0") {
         callback(response);
       } else {
@@ -24,8 +25,38 @@ export function fetchUserPermissions(
       }
     })
     .catch((err) => {
-        console.log(err);        
+        console.log(err);
     //   errorCallback(err.message ? err.message : err);
       errorCallback("Error");
+    });
+}
+
+export function fetchCertificates(
+  token: string,
+  page: number,
+  callback: (response: certificateInfoType) => void,
+  errorCallback: (err: certificateType[]|string|null) => void
+) {
+  const data = new FormData();
+  data.append("page", page.toString());
+
+  fetch(process.env.NEXT_PUBLIC_URL_APIDASHBOARD + "getCertificates.php", {
+    method: "POST",
+    body: data,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+    .then((res) => res.json())
+    .then((response: fetchCertificatesResponseType) => {
+      if (response.code === "0") {
+        callback({"certificates": response.data, "pages": response.pages, "page": response.page, "total": response.total});
+      } else {
+        errorCallback(response.data);
+      }
+    })
+    .catch((err) => {
+        console.log(err);
+        errorCallback("Error");
     });
 }

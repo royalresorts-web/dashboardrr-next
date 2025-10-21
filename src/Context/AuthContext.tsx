@@ -43,9 +43,7 @@ function AuthProvider({ children }: AuthProviderProps) {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser: User | null) => {
-      if (firebaseUser) {
-        console.log(firebaseUser);
-        
+      if (firebaseUser) {      
         setUser({
           uid: firebaseUser.uid,
           email: firebaseUser.email,

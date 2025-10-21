@@ -2,7 +2,7 @@ import { ProtectedRoute, UserSection } from "@/Components"
 import { Menu } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
-import { UserConfigProvider } from "@/Context/UserConfig"
+import { UserConfigProvider } from "@/Context/UserContext"
 
 export default function DashboardLayout({
   children,

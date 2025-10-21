@@ -7,15 +7,15 @@ import { fetchUserPermissions } from '@/lib';
 
 // 1. Definimos el tipo para nuestro objeto de usuario simplificado
 export interface UserPermissionsType {
-  correo: string | null;
-  code: string | null;
-  description: string | null;
-  url: string | null;
+  Correo: string | null;
+  Code: string | null;
+  Description: string | null;
+  Url: string | null;
 }
 export interface UserProyectsType {
-  id: string | null;
-  name: string | null;
-  directory: string | null;
+  ID: string | null;
+  Name: string | null;
+  Directory: string | null;
 }
 
 export interface getPermissionsResType {
@@ -31,10 +31,11 @@ export interface getPermissionsResType {
 interface UserConfigContextType {
   userConfig: UserPermissionsType[] | null;
   userProyects: UserProyectsType[] | null;
+  errorConfig: string | null;
 }
 
 // 3. Creamos el contexto con un valor inicial `undefined` para chequear si se usa fuera del Provider
-const UserConfigContext = createContext<UserConfigContextType | undefined>(undefined);
+export const UserConfigContext = createContext<UserConfigContextType | undefined>(undefined);
 
 // 4. Hook personalizado para usar el contexto de forma segura
 export const useUserConfig = (): UserConfigContextType => {
@@ -59,9 +60,10 @@ function UserConfigProvider({ children }: UserConfigProviderProps) {
 
 
   useEffect(() => {
-    if(user && user.email && !userConfig && !userProyects){
-      console.log("uno entro", user , user.email , !userConfig , !userProyects);
+    if(user && user.email && !userConfig && !userProyects){     
+      
       fetchUserPermissions(user.email, (response: getPermissionsResType) => {
+        // console.log(response);
         setUserConfig(response.Data);
         setUserProyects(response.Proyects);
 
@@ -69,7 +71,7 @@ function UserConfigProvider({ children }: UserConfigProviderProps) {
         setUserConfig(null);
         setUserProyects(null);
         setErrorConfig("Error fetching info: " + err);
-
+        // console.log(err);
       })         
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
