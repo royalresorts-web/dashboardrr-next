@@ -2,9 +2,10 @@
 
 import { UserType } from "@/Context";
 import { fetchCertificateByFolio, folioDisclaimerType } from "@/lib";
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+import { CertificateForm } from "./certificate-form";
 
 interface CertificateFinderProps {
     user: UserType
@@ -13,17 +14,26 @@ interface CertificateFinderProps {
 const CertificateFinder: React.FC<CertificateFinderProps> = ({ user, setLoading }: CertificateFinderProps) => {
     const [cert, setCert] = useState<folioDisclaimerType | null>(null);
     const [folio, setFolio] = useState<string>("");
+    const [errorFolio, setError] = useState<string>("");
 
+    
     const handleFindFolio = () => {
-        if(folio.length !== 0){
+        if (folio.length !== 0) {
             setLoading(true)
             user.getIdToken()
-            .then(res => {
-                fetchCertificateByFolio(folio, res, (record, err) => {
-                    setCert(record)
-                    setLoading(false)
+                .then(res => {
+                    console.log(res);                    
+                    fetchCertificateByFolio(folio, res, (record, err) => {
+                        setLoading(false)                        
+                        if(err){
+                            setError(err)
+                            setCert(null)    
+                        }else{
+                            setCert(record)
+                            setError("")
+                        }
+                    });
                 });
-            });
         }
     }
 
@@ -37,10 +47,13 @@ const CertificateFinder: React.FC<CertificateFinderProps> = ({ user, setLoading 
                     </Button>
                 </div>
             </div>
-            <div className="w-full 3xl:max-w-[1900px] max-w-full mx-auto p-2">
-                <div className="records flex flex-col justify-center gap-[11px] px-2">
-                    ss{cert && cert.Id}
-                </div>
+            <div className="w-full 3xl:max-w-[1700px] max-w-full mx-auto p-2 my-3">
+                {cert ? <CertificateForm user={user} cert={cert} folio={folio} setLoading={setLoading} />: (
+                    <div className="records flex flex-col justify-center items-center gap-[11px] px-2 w-full h-[200px]">
+                        <span className='font-bold text-2xl text-blue-rr'>Agrege un folio válido en el buscador para continuar</span>
+                        <span className='font-bold text-xl text-red-500'>{errorFolio}</span>
+                    </div>
+                )}                                
             </div>
         </>
 

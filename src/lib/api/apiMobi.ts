@@ -1,6 +1,6 @@
 import { certificateInfoType, certificateType, fetchCertificatesResponseType } from "@/Components/disclaimer/dataset";
 import { getPermissionsResType } from "@/Context/UserContext";
-import { folioDisclaimerResponseType, folioDisclaimerType } from "./apiSF.dataset";
+import { apiMobiResponseSetFolioType, folioDisclaimerResponseType, folioDisclaimerType, objToSaveCertificate } from "./apiSF.dataset";
 
 export function getPermissions() {
 }
@@ -78,6 +78,31 @@ export function fetchCertificateByFolio(folio: string, token: string, callback: 
         callback(response.records[0], null);
       } else {
         callback(null, "No hay datos para este folio");
+      }
+    })
+    .catch((err) => {
+      err.message ? console.log(err.message) : console.log(err);
+    });
+}
+
+export function setInfoCertificate($data: objToSaveCertificate, token: string, callback: (record: boolean, err: string | null) => void) {
+  fetch(
+    `${process.env.NEXT_PUBLIC_URL_APIDASHBOARD}/setFolioCertificate.php`,
+    {
+      method: "POST",
+      cache: "no-cache",
+      body: JSON.stringify($data),
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  )
+    .then((res) => res.json())
+    .then((response: apiMobiResponseSetFolioType) => {
+      if (response.code == "1") {
+        callback(true, null);
+      } else {
+        callback(false, "No hay datos para este folio");
       }
     })
     .catch((err) => {

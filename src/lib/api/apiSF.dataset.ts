@@ -50,3 +50,37 @@ export type folioDisclaimerType = {
         }
     }
 }
+
+export type objToSendEmailCertificate = {
+            messageKey: string,
+            keyDefinition: string,
+            to: string,
+            contactKey: string,
+            vars: {
+                Email: string,
+                Folio: string,
+                Nombre: string,
+                Apellido: string,
+                Estatus: string,
+                Fecha: Date,
+            },
+        };
+export type objToSaveCertificate = {
+    "action": string,
+    "id": string | null,
+    "folio": string | null,
+    "name": string | null,
+    "last_name": string | null,
+    "email": string | null,
+    "email_user": string | null,
+    "status": string | null,
+    "fecha": string | null,
+    "fecha_enviado": string | null,
+    "user": string | null,
+    "url_file": string | null
+};
+
+export type apiMobiResponseSetFolioType = {
+    "code": string,
+    "description": string
+}

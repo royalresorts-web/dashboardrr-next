@@ -1,4 +1,4 @@
-import { folioDisclaimerResponseType, folioDisclaimerType, getTokenResponseType } from "./apiSF.dataset";
+import { folioDisclaimerResponseType, folioDisclaimerType, getTokenResponseType, objToSendEmailCertificate } from "./apiSF.dataset";
 
 function fetchDataFolioDisclaimer(folio: string, callback : (record: folioDisclaimerType | null, err: string | null) => void) {
 
@@ -20,6 +20,24 @@ function getTokeyByServer(callback: (token: string) => void, errorCallback: (err
       errorCallback(err.message ? err.message : err);
     });
 }
+function sendEmailForDisclaimer(obj: objToSendEmailCertificate, callback: (success: boolean, err: string | null) => void) {
+  callback(true, null);
+  // fetch(`${process.env.NEXT_PUBLIC_APIDW}/emails/sendMessage`, {
+  //   method: "POST",
+  //   body: JSON.stringify(obj),
+  // })
+  //   .then((res) => res.json())
+  //   .then((response) => {
+  //     if (response.errorcode === 0) {
+  //       callback(true, null);
+  //     } else {
+  //       callback(false, null);
+  //       alert("Hubo un error al enviar");
+  //     }
+  //   })
+  //   .catch((err) => {
+  //     callback(false, err.message ? err.message : err);
+  //   });
+}
 
-
-export { fetchDataFolioDisclaimer, getTokeyByServer };
+export { fetchDataFolioDisclaimer, getTokeyByServer, sendEmailForDisclaimer };

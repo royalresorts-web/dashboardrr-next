@@ -12,7 +12,7 @@ export default function DashboardLayout({
   return (
     <ProtectedRoute>
         <UserConfigProvider>
-          <div className="w-full bg-red-50 h-[100vh]">
+          <div className="w-full h-[100vh]">
               <nav className="flex justify-between items-center py-2 px-2 pe-4 bg-white shadow-md">
                   <Link href="/">
                       <Image width={220} height={36} src="https://www.royalresorts.com/img/logo/svg/royal-resorts.svg" alt="RR Logo"/>
