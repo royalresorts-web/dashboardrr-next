@@ -3,9 +3,10 @@
 import { UserType } from "@/Context";
 import React, { useEffect, useState } from "react";
 import { certificateType } from "./dataset";
-import { fetchCertificates } from "@/lib";
+import { fetchCertificates} from "@/lib";
 import { Button } from "../ui/button";
 import { Ellipsis } from "lucide-react";
+import { RecordDropdownMenu } from "@/Components";
 
 interface CertificateRecordProps {
     user: UserType, 
@@ -23,12 +24,14 @@ const CertificateRecords: React.FC<CertificateRecordProps> = ({user, setLoading}
     const [pagesInfo, setPagesInfo] = useState<pagesInfo>({pages: 0, page: 0, total: 0});
     const [update, setUpdate] = useState<boolean>(true);
    
-
+ 
     useEffect(() => {
         if(update){
             setLoading(true);
             user.getIdToken()
             .then(res => {
+                console.log(res);
+                
                    fetchCertificates(res,pagesInfo.page, (cert)=>{
                        setCertificates(cert.certificates);
                        setPagesInfo({ pages: cert.pages, page: cert.page, total: cert.total})
@@ -63,10 +66,9 @@ const CertificateRecords: React.FC<CertificateRecordProps> = ({user, setLoading}
                     </div>
                     <div className="space flex-2 flex justify-center items-center">{certificate.fecha}</div>
                     <div className="space flex-1 flex justify-center items-center">
-                        <Button className="cursor-pointer bg-blue-rr font-bold">
-                            <Ellipsis />
-                        </Button>
+                        <RecordDropdownMenu user={user} cert={certificate} folio={certificate.folio} idFolio={certificate.id} setLoading={setLoading}/>
                     </div>
+                    
                 </div>
             )
         });
