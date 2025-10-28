@@ -109,3 +109,27 @@ export function setInfoCertificate($data: objToSaveCertificate, token: string, c
       err.message ? console.log(err.message) : console.log(err);
     });
 }
+export function setStatusCertificate($data: objToSaveCertificate, token: string, callback: (record: boolean, err: string | null) => void) {
+  fetch(
+    `${process.env.NEXT_PUBLIC_URL_APIDASHBOARD}/setFolioCertificate.php`,
+    {
+      method: "POST",
+      cache: "no-cache",
+      body: JSON.stringify($data),
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  )
+    .then((res) => res.json())
+    .then((response: apiMobiResponseSetFolioType) => {
+      if (response.code == "1") {
+        callback(true, null);
+      } else {
+        callback(false, "No hay datos para este folio");
+      }
+    })
+    .catch((err) => {
+      err.message ? console.log(err.message) : console.log(err);
+    });
+}
