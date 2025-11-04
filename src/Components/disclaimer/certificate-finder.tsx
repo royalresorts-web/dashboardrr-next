@@ -9,9 +9,11 @@ import { CertificateForm } from "./certificate-form";
 
 interface CertificateFinderProps {
     user: UserType
-    setLoading: React.Dispatch<React.SetStateAction<boolean>>
+    setLoading: React.Dispatch<React.SetStateAction<boolean>>,
+    update: boolean,
+    setUpdate: React.Dispatch<React.SetStateAction<boolean>>
 }
-const CertificateFinder: React.FC<CertificateFinderProps> = ({ user, setLoading }: CertificateFinderProps) => {
+const CertificateFinder: React.FC<CertificateFinderProps> = ({ user, setLoading, setUpdate }: CertificateFinderProps) => {
     const [cert, setCert] = useState<folioDisclaimerType | null>(null);
     const [folio, setFolio] = useState<string>("");
     const [errorFolio, setError] = useState<string>("");
@@ -48,7 +50,7 @@ const CertificateFinder: React.FC<CertificateFinderProps> = ({ user, setLoading 
                 </div>
             </div>
             <div className="w-full 3xl:max-w-[1700px] max-w-full mx-auto p-2 my-3">
-                {cert ? <CertificateForm user={user} cert={cert} folio={folio} setLoading={setLoading} />: (
+                {cert ? <CertificateForm user={user} cert={cert} folio={folio} setLoading={setLoading} setUpdate={setUpdate} />: (
                     <div className="records flex flex-col justify-center items-center gap-[11px] px-2 w-full h-[200px]">
                         <span className='font-bold text-2xl text-blue-rr'>Agrege un folio válido en el buscador para continuar</span>
                         <span className='font-bold text-xl text-red-500'>{errorFolio}</span>

@@ -4,13 +4,15 @@ import { UserType } from "@/Context";
 import React, { useEffect, useState } from "react";
 import { certificateType } from "./dataset";
 import { fetchCertificates} from "@/lib";
-import { Button } from "../ui/button";
-import { Ellipsis } from "lucide-react";
-import { RecordDropdownMenu } from "@/Components";
+import { Pagination, RecordDropdownMenu } from "@/Components";
+import { filter } from "@/app/(routes)/dashboard/disclaimer/page";
 
 interface CertificateRecordProps {
     user: UserType, 
-    setLoading: React.Dispatch<React.SetStateAction<boolean>>
+    setLoading: React.Dispatch<React.SetStateAction<boolean>>,
+    update: boolean,
+    setUpdate: React.Dispatch<React.SetStateAction<boolean>>,
+    filter: filter
 }
 type pagesInfo = {
     pages: number | 0,
@@ -19,10 +21,9 @@ type pagesInfo = {
 }
 
 
-const CertificateRecords: React.FC<CertificateRecordProps> = ({user, setLoading}: CertificateRecordProps) => {
+const CertificateRecords: React.FC<CertificateRecordProps> = ({user, setLoading, update, setUpdate, filter}: CertificateRecordProps) => {
     const [certificates, setCertificates] = useState<certificateType[]>([]);
     const [pagesInfo, setPagesInfo] = useState<pagesInfo>({pages: 0, page: 0, total: 0});
-    const [update, setUpdate] = useState<boolean>(true);
    
  
     useEffect(() => {
@@ -30,9 +31,8 @@ const CertificateRecords: React.FC<CertificateRecordProps> = ({user, setLoading}
             setLoading(true);
             user.getIdToken()
             .then(res => {
-                console.log(res);
-                
-                   fetchCertificates(res,pagesInfo.page, (cert)=>{
+                console.log(res);                
+                   fetchCertificates(res,pagesInfo.page, filter, (cert)=>{
                        setCertificates(cert.certificates);
                        setPagesInfo({ pages: cert.pages, page: cert.page, total: cert.total})
                        setLoading(false);
@@ -46,6 +46,10 @@ const CertificateRecords: React.FC<CertificateRecordProps> = ({user, setLoading}
             setUpdate(false);
         }      
     }, [update, user]);    
+
+    const navigationNext = ()=>{
+        
+    }
 
     const renderRecords = () => {
         return certificates.map((certificate, index) => {
@@ -75,10 +79,12 @@ const CertificateRecords: React.FC<CertificateRecordProps> = ({user, setLoading}
     }
    
   return (
-    <div className="w-full 3xl:max-w-[1900px] max-w-full mx-auto p-2">        
+    <div className="w-full 3xl:max-w-[1900px] max-w-full mx-auto p-2"> 
+        <Pagination totalPages={pagesInfo.pages} currentPage={pagesInfo.page} onPageChange={(page: number) => {}} />
         <div className="records flex flex-col justify-center gap-[11px] px-2">
             {renderRecords()}
-        </div>       
+        </div>
+        <Pagination totalPages={pagesInfo.pages} currentPage={pagesInfo.page} onPageChange={(page: number) => {}} />       
     </div>
   )
 }

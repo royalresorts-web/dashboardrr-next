@@ -6,11 +6,19 @@ import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogTit
 import Loader from "@/Components/loader";
 
 
+export type filter = {
+  folio: string | null,
+  user: string | null,
+  state: "TODOS" | "ACEPTADO" | "ENVIADO"
+}
 
 export default function Page() {
   const { user, logout } = useAuth();
   const { userConfig, userProyects, errorConfig } = useUserConfig();
   const [disclaimerLoading, setDisclaimerLoading] = useState(false);
+  const [update, setUpdate] = useState<boolean>(true);
+  const [filter, setFilter] = useState<filter>({folio: null, user: null, state: "TODOS"})
+
 
   return (
     <div className="w-full h-[calc(100vh-56px)] p-2 ">
@@ -21,10 +29,10 @@ export default function Page() {
         </AlertDialogContent>
       </AlertDialog>
       {
-        user && <CertificateFinder user={user} setLoading={setDisclaimerLoading} />
+        user && <CertificateFinder user={user} setLoading={setDisclaimerLoading} update={update} setUpdate={setUpdate}/>
       }
       {
-        user && <CertificateRecords user={user} setLoading={setDisclaimerLoading}/>
+        user && <CertificateRecords user={user} setLoading={setDisclaimerLoading} update={update} setUpdate={setUpdate} filter={filter} />
       }
     </div>
   )

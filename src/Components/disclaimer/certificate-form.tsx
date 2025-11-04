@@ -11,10 +11,11 @@ interface CertificateFormProps {
     user: UserType,
     cert: folioDisclaimerType | null,
     folio: string,
-    setLoading: React.Dispatch<React.SetStateAction<boolean>>
+    setLoading: React.Dispatch<React.SetStateAction<boolean>>,
+    setUpdate: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const CertificateForm: React.FC<CertificateFormProps> = ({ user, cert, folio, setLoading }: CertificateFormProps) => {
+const CertificateForm: React.FC<CertificateFormProps> = ({ user, cert, folio, setLoading, setUpdate }: CertificateFormProps) => {
     const [email, setEmail] = useState("");
     const [subscriber, setSubscriber] = useState("");
     const [name, setName] = useState("");
@@ -116,6 +117,7 @@ const CertificateForm: React.FC<CertificateFormProps> = ({ user, cert, folio, se
                             setEmail("");
                             setName("");
                             setLastname("");
+                            setUpdate(true);
                         }else{
                             showToast.error("Hubo un error en la operacion", {
                                 duration: 4000,

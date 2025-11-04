@@ -1,7 +1,7 @@
 import { certificateInfoType, certificateType, fetchCertificatesResponseType } from "@/Components/disclaimer/dataset";
 import { getPermissionsResType } from "@/Context/UserContext";
 import { apiMobiResponseSetFolioType, folioDisclaimerResponseType, folioDisclaimerType, objToSaveCertificate } from "./apiSF.dataset";
-
+import { filter } from "@/app/(routes)/dashboard/disclaimer/page";
 export function getPermissions() {
 }
 
@@ -32,14 +32,23 @@ export function fetchUserPermissions(
     });
 }
 
+
 export function fetchCertificates(
   token: string,
   page: number,
+  filter: filter,
   callback: (response: certificateInfoType) => void,
   errorCallback: (err: certificateType[] | string | null) => void
 ) {
   const data = new FormData();
   data.append("page", page.toString());
+
+  if(filter){
+    if (filter.folio) data.append("folio", filter.folio);
+    if (filter.user) data.append("user", filter.user);
+    data.append("status", filter.state)
+  }
+
 
   fetch(process.env.NEXT_PUBLIC_URL_APIDASHBOARD + "getCertificates.php", {
     method: "POST",
