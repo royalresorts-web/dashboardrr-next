@@ -49,7 +49,7 @@ const CertificateFinder: React.FC<CertificateFinderProps> = ({ user, setLoading,
                     </Button>
                 </div>
             </div>
-            <div className="w-full 3xl:max-w-[1700px] max-w-full mx-auto p-2 my-3">
+            <div className="w-full 3xl:max-w-[1700px] max-w-full mx-auto p-2 pb-5 my-3">
                 {cert ? <CertificateForm user={user} cert={cert} folio={folio} setLoading={setLoading} setUpdate={setUpdate} />: (
                     <div className="records flex flex-col justify-center items-center gap-[11px] px-2 w-full h-[200px]">
                         <span className='font-bold text-2xl text-blue-rr'>Agrege un folio válido en el buscador para continuar</span>

@@ -79,7 +79,7 @@ const Pagination: FC<PaginationProps> = ({ totalPages, currentPage, onPageChange
   if (totalPages <= 1) return null;
 
   return (
-    <div className={`flex items-center justify-end space-x-1 p-4 bg-white ${className}`}>
+    <div className={`flex items-center justify-end space-x-1 px-4 py-2 bg-white ${className}`}>
       {/* Previous Button */}
       <button
         onClick={() => onPageChange(currentPage - 1)}

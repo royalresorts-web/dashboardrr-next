@@ -40,19 +40,24 @@ export function fetchCertificates(
   callback: (response: certificateInfoType) => void,
   errorCallback: (err: certificateType[] | string | null) => void
 ) {
-  const data = new FormData();
-  data.append("page", page.toString());
+const params = new URLSearchParams();
+// Always append 'page'
+params.append("page", page.toString()); 
 
-  if(filter){
-    if (filter.folio) data.append("folio", filter.folio);
-    if (filter.user) data.append("user", filter.user);
-    data.append("status", filter.state)
-  }
+// Conditionally append filter values
+if (filter) {
+    if (filter.folio) params.append("folio", filter.folio);
+    if (filter.user) params.append("user", filter.user);
+    // Note: I've kept the original check for 'filter' here, 
+    // but the original code only checked filter.state *if* filter was truthy.
+    // Assuming filter.state is the status you want to pass.
+    if (filter.state) params.append("status", filter.state); 
+}
 
 
-  fetch(process.env.NEXT_PUBLIC_URL_APIDASHBOARD + "getCertificates.php", {
-    method: "POST",
-    body: data,
+  fetch(`${process.env.NEXT_PUBLIC_URL_APIDASHBOARD}getCertificates.php?${params.toString()}`, {
+    method: "GET",
+    // body: data,
     headers: {
       Authorization: `Bearer ${token}`,
     },

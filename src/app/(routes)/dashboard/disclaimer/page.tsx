@@ -9,7 +9,8 @@ import Loader from "@/Components/loader";
 export type filter = {
   folio: string | null,
   user: string | null,
-  state: "TODOS" | "ACEPTADO" | "ENVIADO"
+  state: "TODOS" | "ACEPTADO" | "ENVIADO", 
+  page: number | 1
 }
 
 export default function Page() {
@@ -17,7 +18,7 @@ export default function Page() {
   const { userConfig, userProyects, errorConfig } = useUserConfig();
   const [disclaimerLoading, setDisclaimerLoading] = useState(false);
   const [update, setUpdate] = useState<boolean>(true);
-  const [filter, setFilter] = useState<filter>({folio: null, user: null, state: "TODOS"})
+  const [filter, setFilter] = useState<filter>({folio: null, user: null, state: "TODOS", page: 1})
 
 
   return (
@@ -32,7 +33,7 @@ export default function Page() {
         user && <CertificateFinder user={user} setLoading={setDisclaimerLoading} update={update} setUpdate={setUpdate}/>
       }
       {
-        user && <CertificateRecords user={user} setLoading={setDisclaimerLoading} update={update} setUpdate={setUpdate} filter={filter} />
+        user && <CertificateRecords setFilter={setFilter} user={user} setLoading={setDisclaimerLoading} update={update} setUpdate={setUpdate} filter={filter} />
       }
     </div>
   )
