@@ -80,7 +80,7 @@ const CertificateRecords: React.FC<CertificateRecordProps> = ({user, setLoading,
                     </div>
                     <div className="space flex-2 flex justify-center items-center">{certificate.fecha}</div>
                     <div className="space flex-1 flex justify-center items-center">
-                        <RecordDropdownMenu user={user} cert={certificate} folio={certificate.folio} idFolio={certificate.id} setLoading={setLoading}/>
+                        <RecordDropdownMenu user={user} cert={certificate} folio={certificate.folio} idFolio={certificate.id} setLoading={setLoading}  setUpdate={setUpdate}/>
                     </div>
                     
                 </div>

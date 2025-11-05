@@ -20,31 +20,71 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
 } from "@/Components/ui/dialog"
 
 import { UserType } from '@/Context'
 import { Ellipsis, Save, Trash2 } from 'lucide-react'
 import { certificateType } from './dataset'
-import { RecordChangeStatus } from '@/Components';
+import { DeleteRecord, RecordChangeStatus } from '@/Components';
+import { objToSaveCertificate, setInfoCertificate } from '@/lib';
+import { showToast } from 'nextjs-toast-notify';
 
 interface MenuRecordProps {
     user: UserType,
     cert: certificateType,
     folio: string,
     idFolio: number,
-    setLoading: React.Dispatch<React.SetStateAction<boolean>>
+    setLoading: React.Dispatch<React.SetStateAction<boolean>>,
+     setUpdate: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const RecordDropdownMenu: FC<MenuRecordProps> = ({user, cert, folio, idFolio, setLoading}: MenuRecordProps) => {
+const RecordDropdownMenu: FC<MenuRecordProps> = ({user, cert, folio, idFolio, setLoading,  setUpdate}: MenuRecordProps) => {
     const [openDelete, setOpenDelete] = useState(false)
     const [openFile, setOpenFile] = useState(false)
     const [openStatus, setOpenStatus] = useState(false)
 
 
 
-    const handleStatus = (status: string)=> {
-        setLoading(true)
+    const handleStatus = (folioToSave: objToSaveCertificate)=> {
+        setLoading(true);
+        user.getIdToken()
+        .then(res => {            
+            setInfoCertificate(folioToSave,res, (record, err) => {
+                setLoading(false)
+                if(!err && record){                    
+                    showToast.success("¡La operación se realizó con éxito!", {
+                                        duration: 4000,
+                                        progress: true,
+                                        position: "top-right",
+                                        transition: "bounceIn",
+                                        icon: '',
+                                        sound: true,
+                                    });
+                    setUpdate(true);
+                }else{
+                    showToast.error("Hubo un error en la operacion", {
+                            duration: 4000,
+                            progress: true,
+                            position: "top-right",
+                            transition: "bounceIn",
+                            icon: '',
+                            sound: true,
+                        });
+                }
+            }); 
+
+        }).catch(err => {
+            console.log(err);
+            setLoading(false);
+            showToast.error("Hubo un error en la operacion", {
+                            duration: 4000,
+                            progress: true,
+                            position: "top-right",
+                            transition: "bounceIn",
+                            icon: '',
+                            sound: true,
+                        });
+        })
     }
 
 
@@ -76,7 +116,7 @@ const RecordDropdownMenu: FC<MenuRecordProps> = ({user, cert, folio, idFolio, se
             </DropdownMenu>
 
 
-            <Dialog open={openDelete} onOpenChange={setOpenDelete}>
+            {/* <Dialog open={openDelete} onOpenChange={setOpenDelete}>
                 <DialogContent>
                     <DialogHeader>
                         <DialogTitle>¿Desea Eliminar el registro?</DialogTitle>
@@ -89,24 +129,10 @@ const RecordDropdownMenu: FC<MenuRecordProps> = ({user, cert, folio, idFolio, se
                         <Button variant="outline" className='text-red-600 cursor-pointer hover:text-red-800'>Eliminar <Trash2 color="#9f0712" strokeWidth={1} /></Button>
                     </DialogFooter>
                 </DialogContent>
-            </Dialog>
+            </Dialog> */}
+            <DeleteRecord open={openDelete} onOpenChange={setOpenDelete} user={user} cert={cert} folio={folio} idFolio={idFolio} handleStatus={handleStatus}/>
+            <RecordChangeStatus open={openStatus} onOpenChange={setOpenStatus} user={user} cert={cert} folio={folio} idFolio={idFolio} handleStatus={handleStatus}/>
 
-
-            <Dialog open={openStatus} onOpenChange={setOpenStatus}>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle className='text-blue-rr'>¿Desea cambiar el status de este certificado ?</DialogTitle>                        
-                    </DialogHeader>
-                    <div className='w-full p-2 flex justify-center items-center gap-2'>
-                        <span className='font-semibold'>Seleccione el nuevo el status de este certificado</span>  
-                        <RecordChangeStatus user={user} cert={cert} folio={folio} idFolio={idFolio} setLoading={setLoading}/>
-                    </div>
-                    <DialogFooter>
-                        <Button variant="outline" className=' cursor-pointer ' onClick={e => setOpenStatus(false)}>Cancelar</Button>
-                        <Button variant="outline" className='text-blue-rr cursor-pointer hover:text-blue-rr'>Guardar <Save strokeWidth={1.25} /></Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
         </>
 
     )
