@@ -25,8 +25,8 @@ import {
 import { UserType } from '@/Context'
 import { Ellipsis, Save, Trash2 } from 'lucide-react'
 import { certificateType } from './dataset'
-import { DeleteRecord, RecordChangeStatus } from '@/Components';
-import { objToSaveCertificate, setInfoCertificate } from '@/lib';
+import { DeleteRecord, RecordChangeStatus, RecordAddFile } from '@/Components';
+import { objToSaveCertificate, setInfoCertificate,  } from '@/lib';
 import { showToast } from 'nextjs-toast-notify';
 
 interface MenuRecordProps {
@@ -100,36 +100,20 @@ const RecordDropdownMenu: FC<MenuRecordProps> = ({user, cert, folio, idFolio, se
                     <DropdownMenuGroup>
                         <DropdownMenuItem className='cursor-pointer'  onClick={e => setOpenStatus(true)}>
                             Cambiar estatus
-                            {/* <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut> */}
                         </DropdownMenuItem>
-                        <DropdownMenuItem className='cursor-pointer'>
-                            Agregar Archivo
-                            {/* <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut> */}
+                        <DropdownMenuItem className='cursor-pointer' onClick={e => setOpenFile(true)}>
+                            {
+                                cert.url_file == "" ? "Agregar Archivo":"Ver Archivo"
+                            }
                         </DropdownMenuItem>
                         <DropdownMenuItem className='cursor-pointer text-red-600 hover:text-red-800' onClick={e => setOpenDelete(true)}>
                             Eliminar Registro
                             <Trash2 color="#9f0712" strokeWidth={1} />
-                            {/* <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut> */}
                         </DropdownMenuItem>
                     </DropdownMenuGroup>
                 </DropdownMenuContent>
             </DropdownMenu>
-
-
-            {/* <Dialog open={openDelete} onOpenChange={setOpenDelete}>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>¿Desea Eliminar el registro?</DialogTitle>
-                        <DialogDescription>
-                            Al continuar el registro se eliminará definitivamente.
-                        </DialogDescription>
-                    </DialogHeader>
-                    <DialogFooter>
-                        <Button variant="outline" className=' cursor-pointer ' onClick={e => setOpenDelete(false)}>Cancelar</Button>
-                        <Button variant="outline" className='text-red-600 cursor-pointer hover:text-red-800'>Eliminar <Trash2 color="#9f0712" strokeWidth={1} /></Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog> */}
+            <RecordAddFile setLoading={setLoading} open={openFile} onOpenChange={setOpenFile} user={user} cert={cert} folio={folio} idFolio={idFolio} handleStatus={handleStatus}/>
             <DeleteRecord open={openDelete} onOpenChange={setOpenDelete} user={user} cert={cert} folio={folio} idFolio={idFolio} handleStatus={handleStatus}/>
             <RecordChangeStatus open={openStatus} onOpenChange={setOpenStatus} user={user} cert={cert} folio={folio} idFolio={idFolio} handleStatus={handleStatus}/>
 

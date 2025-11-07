@@ -84,3 +84,15 @@ export type apiMobiResponseSetFolioType = {
     "code": string,
     "description": string
 }
+
+export type uploadFileResponse = {
+    "code": string,
+    "data": uploadFileDataResponse[] | string,
+    "description": string | null
+}
+export type uploadFileDataResponse = {
+        "url": string,
+        "file": string,
+        "idOperation": string,
+        "Date": string
+    }
