@@ -2,7 +2,7 @@
 import { UserType } from '@/Context'
 import React, { ChangeEvent, useState } from 'react'
 import { certificateType } from './dataset'
-import { objToSaveCertificate, uploadCertificate, uploadFileDataResponse } from '@/lib'
+import { objToSaveCertificate, uploadCertificate } from '@/lib'
 import { Button } from '../ui/button'
 import { FileUp, Trash } from 'lucide-react'
 import { showToast } from 'nextjs-toast-notify'
@@ -23,7 +23,7 @@ const LoadFileRecord: React.FC<LoadFileRecordProps> = ({cert,user, setLoading, h
     const handleFileSelect = (event: ChangeEvent<HTMLInputElement>) => {
         const target = event.target as HTMLInputElement;
         if (!target.files) return;
-        let tempFiles: File[] = [];
+        const tempFiles: File[] = [];
         
         Object.values(target.files).forEach((f) => {
             tempFiles.push(f);
@@ -36,7 +36,7 @@ const LoadFileRecord: React.FC<LoadFileRecordProps> = ({cert,user, setLoading, h
     const uploadPDFToDB = async () => {
         setLoading(true);
         const nameFile = `certificate-${cert.folio}-${cert.email}`;
-        await uploadCertificate(File, user.email!! ,0, nameFile, (data, err) => {
+        await uploadCertificate(File, user.email! ,0, nameFile, (data, err) => {
               if (!err) {
                     showToast.success("Archivo subido con éxito, actualizando en la BD...", {
                         duration: 4000,

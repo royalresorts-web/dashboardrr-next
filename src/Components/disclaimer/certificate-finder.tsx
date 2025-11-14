@@ -2,7 +2,7 @@
 
 import { UserType } from "@/Context";
 import { fetchCertificateByFolio, folioDisclaimerType } from "@/lib";
-import React, { use, useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { CertificateForm } from "./certificate-form";
@@ -44,7 +44,7 @@ const CertificateFinder: React.FC<CertificateFinderProps> = ({ user, setLoading,
             <div className="w-full h-auto py-1 items-center flex justify-center">
                 <div className="flex w-full max-w-sm items-center gap-2">
                     <Input type="email" placeholder="Id del Folio" value={folio} onChange={(e) => setFolio(e.target.value)} className="bg-white" />
-                    <Button onClick={(e) => handleFindFolio()} variant="outline" >
+                    <Button onClick={() => handleFindFolio()} variant="outline" >
                         Buscar
                     </Button>
                 </div>

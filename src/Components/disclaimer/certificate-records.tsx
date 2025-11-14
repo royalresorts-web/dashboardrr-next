@@ -52,7 +52,7 @@ const CertificateRecords: React.FC<CertificateRecordProps> = ({ user, setLoading
                 });
             setUpdate(false);
         }
-    }, [update, user]);
+    }, [update, user, filter, setLoading, setUpdate]);
 
     const navigationNext = (page: number) => {
         setFilter({ ...filter, page: page });
@@ -140,7 +140,7 @@ const CertificateRecords: React.FC<CertificateRecordProps> = ({ user, setLoading
         return (
             <div className="w-full flex flex-row justify-between ">
                 <div className="flex items-center gap-2c">
-                    <Button onClick={(e) => { downloadFile() }} variant="outline" className="cursor-pointer" >
+                    <Button onClick={() => { downloadFile() }} variant="outline" className="cursor-pointer" >
                         <FileDown /> Exportar Filtro
                     </Button>
                 </div>
@@ -154,16 +154,16 @@ const CertificateRecords: React.FC<CertificateRecordProps> = ({ user, setLoading
                     </div>
                     <div className="flex w-[300px] max-w-sm items-center gap-2">
                         <ButtonGroup>
-                            <Button onClick={e => setFilter({ ...filter, page: 1, state: "ACEPTADO" })} className="cursor-pointer" variant={`${filter.state == "ACEPTADO" ? "secondary" : "outline"}`}>ACEPTADOS</Button>
-                            <Button onClick={e => setFilter({ ...filter, page: 1, state: "ENVIADO" })} className="cursor-pointer" variant={`${filter.state == "ENVIADO" ? "secondary" : "outline"}`}>ENVIADOS</Button>
-                            <Button onClick={e => setFilter({ ...filter, page: 1, state: "TODOS" })} className="cursor-pointer" variant={`${filter.state == "TODOS" ? "secondary" : "outline"}`}>TODOS</Button>
+                            <Button onClick={() => setFilter({ ...filter, page: 1, state: "ACEPTADO" })} className="cursor-pointer" variant={`${filter.state == "ACEPTADO" ? "secondary" : "outline"}`}>ACEPTADOS</Button>
+                            <Button onClick={() => setFilter({ ...filter, page: 1, state: "ENVIADO" })} className="cursor-pointer" variant={`${filter.state == "ENVIADO" ? "secondary" : "outline"}`}>ENVIADOS</Button>
+                            <Button onClick={() => setFilter({ ...filter, page: 1, state: "TODOS" })} className="cursor-pointer" variant={`${filter.state == "TODOS" ? "secondary" : "outline"}`}>TODOS</Button>
                         </ButtonGroup>
                     </div>
                     <div className="flex w-[300px] max-w-sm justify-center items-center gap-2">
-                        <Button onClick={(e) => { setUpdate(true) }} variant="outline" className="cursor-pointer" >
+                        <Button onClick={() => { setUpdate(true) }} variant="outline" className="cursor-pointer" >
                             <Search /> Buscar
                         </Button>
-                        <Button onClick={(e) => {
+                        <Button onClick={() => {
                             setFilter({ ...filter, page: 1, user: null, folio: null, state: "TODOS" })
                             setUpdate(true)
                         }

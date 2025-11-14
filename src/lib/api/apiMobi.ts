@@ -41,10 +41,15 @@ export function fetchUserPermissions(
 export function getUrlForCertificatesExport(filter: filter){
   let conditions = "";
   
-  filter.folio && (conditions += `&folio=${filter.folio}`);
-  filter.user && (conditions += `&user=${filter.user}`);
-  filter.state && (conditions += `&status=${filter.state}`);
-  
+  if (filter.folio) {
+    conditions += `&folio=${filter.folio}`;
+  }
+  if (filter.user) {
+    conditions += `&user=${filter.user}`;
+  }
+  if (filter.state) {
+    conditions += `&status=${filter.state}`;
+  }
 
   const downloadUrl = `${process.env.NEXT_PUBLIC_URL_APIDASHBOARD}getCertificates.php?export=1${conditions}`;
   return downloadUrl;
@@ -112,7 +117,11 @@ export function fetchCertificateByFolio(folio: string, token: string, callback: 
       }
     })
     .catch((err) => {
-      err.message ? console.log(err.message) : console.log(err);
+      if (err.message) {
+        console.log(err.message);
+      } else {
+        console.log(err);
+      }      
     });
 }
 
@@ -137,7 +146,11 @@ export function setInfoCertificate($data: objToSaveCertificate, token: string, c
       }
     })
     .catch((err) => {
-      err.message ? console.log(err.message) : console.log(err);
+      if (err.message) {
+        console.log(err.message);
+      } else {
+        console.log(err);
+      }
     });
 }
 export function setStatusCertificate($data: objToSaveCertificate, token: string, callback: (record: boolean, err: string | null) => void) {
@@ -161,18 +174,22 @@ export function setStatusCertificate($data: objToSaveCertificate, token: string,
       }
     })
     .catch((err) => {
-      err.message ? console.log(err.message) : console.log(err);
+      if (err.message) {
+        console.log(err.message);
+      } else {
+        console.log(err);
+      }
     });
 }
-export const uploadCertificate =async (file: File[], email: string, proyect:Number = 1, name:string = "custom-0989", callback: (sucess: uploadFileDataResponse | null, err :null | string) => void) => {
-  let data = new FormData();
+export const uploadCertificate =async (file: File[], email: string, proyect:number = 0, name:string = "custom-0989", callback: (sucess: uploadFileDataResponse | null, err :null | string) => void) => {
+  const data = new FormData();
   file.map((f, id) => {
     data.append("archivo[" + id + "]", f);
     return true;
   });
 
   data.append("user", "2");
-  data.append("proyect", "0");
+  data.append("proyect", proyect.toString());
   data.append("email", email);
   data.append("name", name);
 

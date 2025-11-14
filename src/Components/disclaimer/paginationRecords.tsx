@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useMemo, useCallback, FC } from 'react';
+import React, { useMemo, useCallback, FC } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react'; // Using lucide-react for modern icons
 
 // Interface for Pagination component props

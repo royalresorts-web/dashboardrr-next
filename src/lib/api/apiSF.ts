@@ -1,11 +1,5 @@
-import { folioDisclaimerResponseType, folioDisclaimerType, getTokenResponseType, objToSendEmailCertificate } from "./apiSF.dataset";
+import { getTokenResponseType, objToSendEmailCertificate } from "./apiSF.dataset";
 
-function fetchDataFolioDisclaimer(folio: string, callback : (record: folioDisclaimerType | null, err: string | null) => void) {
-
-
-
-
-}
 function getTokeyByServer(callback: (token: string) => void, errorCallback: (err: string) => void) {
   fetch(`${process.env.REACT_APP_APIDW}/CRM/getTokenByServer`, {
     method: "POST",
@@ -40,4 +34,4 @@ function sendEmailForDisclaimer(obj: objToSendEmailCertificate, callback: (succe
     });
 }
 
-export { fetchDataFolioDisclaimer, getTokeyByServer, sendEmailForDisclaimer };
+export { getTokeyByServer, sendEmailForDisclaimer };

@@ -1,18 +1,17 @@
 "use client";
-import { useAuth, UserProyectsType, useUserConfig } from "@/Context";
+import { useUserConfig } from "@/Context";
 import React from "react";
 import Link from "next/link";
 
 export default function Page() {
-    const { user, logout } = useAuth();
-    const { userConfig, userProyects, errorConfig } = useUserConfig();
+    const { userConfig, errorConfig } = useUserConfig();
    
    let renderModules: React.ReactElement[] = [];
    
    if(userConfig){
     renderModules = userConfig.map((e,k) => {
       return (
-        <Link key={k} href={"/dashboard" + e.Url!!} className="duration-30 text-white ease-in-out hover:scale-105" >
+        <Link key={k} href={"/dashboard" + e.Url!} className="duration-30 text-white ease-in-out hover:scale-105" >
           <div  className="rounded w-[300px] h-[200px] bg-white text-blue-rr shadow-sm flex flex-col justify-between cursor-pointer">
             <div className="flex justify-center items-center flex-1 p-2 font-bold text-md">
               {e.Description}

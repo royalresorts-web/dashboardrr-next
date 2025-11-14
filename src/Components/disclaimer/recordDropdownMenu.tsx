@@ -3,27 +3,15 @@ import React, { FC, useState } from 'react'
 import { Button } from "@/Components/ui/button"
 import {
     DropdownMenu,
-    DropdownMenuCheckboxItem,
     DropdownMenuContent,
     DropdownMenuGroup,
     DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuShortcut,
     DropdownMenuTrigger,
 } from "@/Components/ui/dropdown-menu"
 
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from "@/Components/ui/dialog"
 
 import { UserType } from '@/Context'
-import { Ellipsis, Save, Trash2 } from 'lucide-react'
+import { Ellipsis, Trash2 } from 'lucide-react'
 import { certificateType } from './dataset'
 import { DeleteRecord, RecordChangeStatus, RecordAddFile } from '@/Components';
 import { objToSaveCertificate, setInfoCertificate,  } from '@/lib';
@@ -98,15 +86,15 @@ const RecordDropdownMenu: FC<MenuRecordProps> = ({user, cert, folio, idFolio, se
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56">
                     <DropdownMenuGroup>
-                        <DropdownMenuItem className='cursor-pointer'  onClick={e => setOpenStatus(true)}>
+                        <DropdownMenuItem className='cursor-pointer'  onClick={() => setOpenStatus(true)}>
                             Cambiar estatus
                         </DropdownMenuItem>
-                        <DropdownMenuItem className='cursor-pointer' onClick={e => setOpenFile(true)}>
+                        <DropdownMenuItem className='cursor-pointer' onClick={() => setOpenFile(true)}>
                             {
                                 cert.url_file == "" ? "Agregar Archivo":"Ver Archivo"
                             }
                         </DropdownMenuItem>
-                        <DropdownMenuItem className='cursor-pointer text-red-600 hover:text-red-800' onClick={e => setOpenDelete(true)}>
+                        <DropdownMenuItem className='cursor-pointer text-red-600 hover:text-red-800' onClick={() => setOpenDelete(true)}>
                             Eliminar Registro
                             <Trash2 color="#9f0712" strokeWidth={1} />
                         </DropdownMenuItem>

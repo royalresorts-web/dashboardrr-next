@@ -15,7 +15,7 @@ interface CertificateFormProps {
     setUpdate: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const CertificateForm: React.FC<CertificateFormProps> = ({ user, cert, folio, setLoading, setUpdate }: CertificateFormProps) => {
+const CertificateForm: React.FC<CertificateFormProps> = ({ user, cert, setLoading, setUpdate }: CertificateFormProps) => {
     const [email, setEmail] = useState("");
     const [subscriber, setSubscriber] = useState("");
     const [name, setName] = useState("");
@@ -199,7 +199,7 @@ const CertificateForm: React.FC<CertificateFormProps> = ({ user, cert, folio, se
                     {
                         cert && (
                             <div className="flex w-full justify-center items-center gap-1">
-                                <Button onClick={(e) => requestEmail("es-MX")} variant="outline" className='cursor-pointer'>
+                                <Button onClick={() => requestEmail("es-MX")} variant="outline" className='cursor-pointer'>
                                     Enviar
                                     <Image src="https://royalresorts.mobi/imagesCloudPages/disclaimer/es-flag.png" width={24} height={16} alt='Flag Mex' />
                                 </Button>
@@ -209,7 +209,7 @@ const CertificateForm: React.FC<CertificateFormProps> = ({ user, cert, folio, se
                     {
                         cert && (
                             <div className="flex w-full justify-center items-center gap-1" >
-                                <Button onClick={(e) => requestEmail("en-US")} variant="outline" className='cursor-pointer'>
+                                <Button onClick={() => requestEmail("en-US")} variant="outline" className='cursor-pointer'>
                                     Send
                                     <Image src="https://royalresorts.mobi/imagesCloudPages/disclaimer/en-flag.png" width={24} height={16} alt='Flag Mex' />
                                 </Button>

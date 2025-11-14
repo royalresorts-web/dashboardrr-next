@@ -1,13 +1,13 @@
 "use client"
 import { UserType } from '@/Context'
-import React, { ChangeEvent, FC, useEffect, useState } from 'react'
+import React, { FC } from 'react'
 import { certificateType } from './dataset'
 import PDF from "../../img/pdf-svg.svg"
 
 import { Button } from '../ui/button'
-import { Copy, FileUp, Save, Trash } from 'lucide-react'
+import { Copy, Trash } from 'lucide-react'
 import { Dialog, DialogContent, DialogTitle, DialogFooter, DialogHeader } from '../ui/dialog'
-import { objToSaveCertificate, uploadFileDataResponse } from '@/lib'
+import { objToSaveCertificate } from '@/lib'
 import {LoadFileRecord} from '@/Components'
 import Image from 'next/image'
 import { showToast } from 'nextjs-toast-notify'
@@ -35,12 +35,10 @@ interface RecordAddFileProps {
 }
 
 export const RecordAddFile: FC<RecordAddFileProps> = ({ user, cert, handleStatus, open, onOpenChange, setLoading}: RecordAddFileProps) => {
-    const [value, setValue] = React.useState("")
-
 
     const showFile = (file: string) => {
-        let w = 600;
-        let h = 800;
+        const w = 600;
+        const h = 800;
         if (typeof window === 'undefined' || !window.top) {
             // Safety check: Don't run if window/top window is unavailable
             console.error("Window object or top window not available for centering.");
@@ -148,10 +146,10 @@ export const RecordAddFile: FC<RecordAddFileProps> = ({ user, cert, handleStatus
             }
         }
     }
-    function shareUrl(event: React.MouseEvent<HTMLOrSVGElement>): void {
+    function shareUrl(): void {
         handleShareOrCopy(cert.url_file, cert)
     }
-    function deleteFile(event: React.MouseEvent<HTMLOrSVGElement>): void {
+    function deleteFile(): void {
         const folioToSave: objToSaveCertificate = {
             action: "file",
             folio: cert.folio,

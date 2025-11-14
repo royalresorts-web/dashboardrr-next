@@ -1,10 +1,9 @@
 "use client";
-import { useAuth, useUserConfig } from "@/Context";
+import { useAuth } from "@/Context";
 import React, { useState } from "react";
 import { CertificateFinder, CertificateRecords } from "@/Components";
-import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogTitle } from "@/Components/ui/alert-dialog";
+import { AlertDialog, AlertDialogContent, AlertDialogTitle } from "@/Components/ui/alert-dialog";
 import Loader from "@/Components/loader";
-
 
 export type filter = {
   folio: string | null,
@@ -14,8 +13,7 @@ export type filter = {
 }
 
 export default function Page() {
-  const { user, logout } = useAuth();
-  const { userConfig, userProyects, errorConfig } = useUserConfig();
+  const { user} = useAuth();
   const [disclaimerLoading, setDisclaimerLoading] = useState(false);
   const [update, setUpdate] = useState<boolean>(true);
   const [filter, setFilter] = useState<filter>({folio: null, user: null, state: "TODOS", page: 1})

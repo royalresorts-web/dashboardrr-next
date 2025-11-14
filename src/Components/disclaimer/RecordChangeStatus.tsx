@@ -22,7 +22,7 @@ interface RecordChangeStatusProps {
     onOpenChange: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export const RecordChangeStatus: FC<RecordChangeStatusProps> = ({user, cert, handleStatus, open, onOpenChange}: RecordChangeStatusProps) => {
+export const RecordChangeStatus: FC<RecordChangeStatusProps> = ({ cert, handleStatus, open, onOpenChange}: RecordChangeStatusProps) => {
     const [value, setValue] = React.useState("")
  
     useEffect(() => {
@@ -33,7 +33,7 @@ export const RecordChangeStatus: FC<RecordChangeStatusProps> = ({user, cert, han
       return () => {
         setValue("")
       }
-    }, [])
+    }, [cert])
 
     const setStatus = ()=>{      
       const folioToSave: objToSaveCertificate = {
@@ -69,7 +69,7 @@ export const RecordChangeStatus: FC<RecordChangeStatusProps> = ({user, cert, han
 
                 </div>
                 <DialogFooter>
-                    <Button variant="outline" className=' cursor-pointer ' onClick={e => {onOpenChange(false)}}>Cancelar</Button>
+                    <Button variant="outline" className=' cursor-pointer ' onClick={() => {onOpenChange(false)}}>Cancelar</Button>
                     <Button onClick={()=> setStatus()} variant="outline" className='text-blue-rr cursor-pointer hover:text-blue-rr'>Guardar <Save strokeWidth={1.25} /></Button>
                 </DialogFooter>
             </DialogContent>
