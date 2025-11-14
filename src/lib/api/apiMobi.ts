@@ -38,6 +38,17 @@ export function fetchUserPermissions(
     });
 }
 
+export function getUrlForCertificatesExport(filter: filter){
+  let conditions = "";
+  
+  filter.folio && (conditions += `&folio=${filter.folio}`);
+  filter.user && (conditions += `&user=${filter.user}`);
+  filter.state && (conditions += `&status=${filter.state}`);
+  
+
+  const downloadUrl = `${process.env.NEXT_PUBLIC_URL_APIDASHBOARD}getCertificates.php?export=1${conditions}`;
+  return downloadUrl;
+}
 
 export function fetchCertificates(
   token: string,
