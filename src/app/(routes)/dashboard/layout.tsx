@@ -3,7 +3,19 @@ import { Menu } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { UserConfigProvider } from "@/Context/UserContext"
-
+import { Metadata } from "next"
+export const metadata: Metadata = {
+  title: "Dashboard - Royal Resorts",
+  description: "Administrador de servicios y aplicaciones para usuarios en Royal Resorts",
+  icons: {
+    icon: [
+        { url: 'https://www.royalresorts.com/img/logo/favicon96x96.png' },
+        { url: 'https://www.royalresorts.com/img/logo/favicon32x32.png', sizes: '32x32', type: 'image/png' },
+        { url: 'https://www.royalresorts.com/img/logo/favicon16x16.png', sizes: '16x16', type: 'image/png' },
+    ],
+    apple: [{ url: 'https://www.royalresorts.com/img/logo/touch-ipad-ret.png', sizes: '180x180' }],
+  }    
+};
 export default function DashboardLayout({
   children,
 }: {
