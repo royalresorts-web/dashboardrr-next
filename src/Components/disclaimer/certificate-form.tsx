@@ -9,13 +9,14 @@ import { showToast } from 'nextjs-toast-notify';
 
 interface CertificateFormProps {
     user: UserType,
+    logout: () => Promise<void>,
     cert: folioDisclaimerType | null,
     folio: string,
     setLoading: React.Dispatch<React.SetStateAction<boolean>>,
     setUpdate: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const CertificateForm: React.FC<CertificateFormProps> = ({ user, cert, setLoading, setUpdate }: CertificateFormProps) => {
+const CertificateForm: React.FC<CertificateFormProps> = ({ user,logout, cert, setLoading, setUpdate }: CertificateFormProps) => {
     const [email, setEmail] = useState("");
     const [subscriber, setSubscriber] = useState("");
     const [name, setName] = useState("");
@@ -129,7 +130,10 @@ const CertificateForm: React.FC<CertificateFormProps> = ({ user, cert, setLoadin
                             });
                         }
                     });
-                })                
+                }).catch(() => {
+                    setLoading(false);
+                    logout();
+                });             
             }
             if(err){
                 showToast.error("hubo un error: " + err, {

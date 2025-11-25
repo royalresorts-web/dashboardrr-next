@@ -19,6 +19,7 @@ import { showToast } from 'nextjs-toast-notify';
 
 interface MenuRecordProps {
     user: UserType,
+    logout: () => Promise<void>,
     cert: certificateType,
     folio: string,
     idFolio: number,
@@ -26,7 +27,7 @@ interface MenuRecordProps {
      setUpdate: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const RecordDropdownMenu: FC<MenuRecordProps> = ({user, cert, folio, idFolio, setLoading,  setUpdate}: MenuRecordProps) => {
+const RecordDropdownMenu: FC<MenuRecordProps> = ({user,logout, cert, folio, idFolio, setLoading,  setUpdate}: MenuRecordProps) => {
     const [openDelete, setOpenDelete] = useState(false)
     const [openFile, setOpenFile] = useState(false)
     const [openStatus, setOpenStatus] = useState(false)
@@ -72,6 +73,7 @@ const RecordDropdownMenu: FC<MenuRecordProps> = ({user, cert, folio, idFolio, se
                             icon: '',
                             sound: true,
                         });
+            logout();           
         })
     }
 

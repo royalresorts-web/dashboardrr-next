@@ -28,7 +28,7 @@ const CertificateRecords = dynamic(() => import('@/Components/disclaimer/certifi
 });
 
 export default function Page() {
-  const { user} = useAuth();
+  const { user, logout} = useAuth();
   const [disclaimerLoading, setDisclaimerLoading] = useState(false);
   const [update, setUpdate] = useState<boolean>(true);
   const [filter, setFilter] = useState<filter>({folio: null, user: null, state: "TODOS", page: 1})
@@ -38,10 +38,10 @@ export default function Page() {
 
       <LoadingDisclaimer disclaimerLoading={disclaimerLoading} />        
       {
-        user && <CertificateFinder user={user} setLoading={setDisclaimerLoading} update={update} setUpdate={setUpdate}/>
+        user && <CertificateFinder user={user} logout={logout} setLoading={setDisclaimerLoading} update={update} setUpdate={setUpdate}/>
       }
       {
-        user && <CertificateRecords setFilter={setFilter} user={user} setLoading={setDisclaimerLoading} update={update} setUpdate={setUpdate} filter={filter} />
+        user && <CertificateRecords logout={logout} setFilter={setFilter} user={user} setLoading={setDisclaimerLoading} update={update} setUpdate={setUpdate} filter={filter} />
       }
     </div>
   )

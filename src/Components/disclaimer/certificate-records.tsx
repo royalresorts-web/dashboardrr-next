@@ -15,6 +15,7 @@ import { FileDown, Search } from "lucide-react";
 
 interface CertificateRecordProps {
     user: UserType,
+    logout: () => Promise<void>,
     setLoading: React.Dispatch<React.SetStateAction<boolean>>,
     update: boolean,
     setUpdate: React.Dispatch<React.SetStateAction<boolean>>,
@@ -28,7 +29,7 @@ type pagesInfo = {
 }
 
 
-const CertificateRecords: React.FC<CertificateRecordProps> = ({ user, setLoading, update, setUpdate, filter, setFilter }: CertificateRecordProps) => {
+const CertificateRecords: React.FC<CertificateRecordProps> = ({ user, logout, setLoading, update, setUpdate, filter, setFilter }: CertificateRecordProps) => {
     const [certificates, setCertificates] = useState<certificateType[]>([]);
     const [pagesInfo, setPagesInfo] = useState<pagesInfo>({ pages: 0, page: 0, total: 0 });
 
@@ -49,10 +50,14 @@ const CertificateRecords: React.FC<CertificateRecordProps> = ({ user, setLoading
                             setLoading(false);
                         })
                     setUpdate(false);
+                })
+                .catch(() => {
+                    setLoading(false);
+                    logout();
                 });
             setUpdate(false);
         }
-    }, [update, user, filter, setLoading, setUpdate]);
+    }, [update, user, filter, setLoading, setUpdate, logout]);
 
     const navigationNext = (page: number) => {
         setFilter({ ...filter, page: page });
@@ -107,6 +112,9 @@ const CertificateRecords: React.FC<CertificateRecordProps> = ({ user, setLoading
                     }
                     // You could show an error message to the user here
                 }
+            })
+            .catch(() => {
+                logout();
             });
     }
 
@@ -129,7 +137,7 @@ const CertificateRecords: React.FC<CertificateRecordProps> = ({ user, setLoading
                     </div>
                     <div className="space flex-2 flex justify-center items-center">{certificate.fecha}</div>
                     <div className="space flex-1 flex justify-center items-center">
-                        <RecordDropdownMenu user={user} cert={certificate} folio={certificate.folio} idFolio={certificate.id} setLoading={setLoading} setUpdate={setUpdate} />
+                        <RecordDropdownMenu user={user} logout={logout} cert={certificate} folio={certificate.folio} idFolio={certificate.id} setLoading={setLoading} setUpdate={setUpdate} />
                     </div>
 
                 </div>
