@@ -51,7 +51,7 @@ const Imageuploader: React.FC<ImageUploaderProps> = () => {
             Object.values(event.currentTarget.files).forEach((f) => {
                 tempFiles.push(f);
             });
-            event.currentTarget.files = null;
+            event.target.value = "";
         }
         setFile(tempFiles);
     };
