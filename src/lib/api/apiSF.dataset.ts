@@ -96,3 +96,12 @@ export type uploadFileDataResponse = {
         "idOperation": string,
         "Date": string
     }
+export type uploadImageDataResponse = {
+        "code": string,
+        "data": string,
+        "url": string,
+        "file": string,
+        "idOperation": string,
+        "Date": string,
+        "description": string | null
+    }    

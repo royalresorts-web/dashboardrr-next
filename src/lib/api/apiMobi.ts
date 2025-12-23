@@ -6,6 +6,7 @@ import {
   folioDisclaimerType, 
   objToSaveCertificate, 
   uploadFileDataResponse, 
+  uploadImageDataResponse,
   uploadFileResponse } from "./apiSF.dataset";
 import { filter } from "@/app/(routes)/dashboard/disclaimer/page";
 export function getPermissions() {
@@ -22,6 +23,7 @@ export function fetchUserPermissions(
   fetch(process.env.NEXT_PUBLIC_URL_APIDASHBOARD + "getPermissions.php", {
     method: "POST",
     body: data,
+    cache: 'no-store' 
   })
     .then((res) => res.json())
     .then((response: getPermissionsResType) => {
@@ -80,6 +82,7 @@ if (filter) {
   fetch(`${process.env.NEXT_PUBLIC_URL_APIDASHBOARD}getCertificates.php?${params.toString()}`, {
     method: "GET",
     // body: data,
+    cache: 'no-store',
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -197,6 +200,7 @@ export const uploadCertificate =async (file: File[], email: string, proyect:numb
   fetch(process.env.NEXT_PUBLIC_URL_APIDASHBOARD + "FileUploaderCertificatesByEmail.php", {
     method: "POST",
     body: data,
+    cache: "no-cache",
   })
     .then((response) => response.json())
     .then((res: uploadFileResponse) => {
@@ -212,6 +216,35 @@ export const uploadCertificate =async (file: File[], email: string, proyect:numb
         }else{
           callback(null, res.data);
         }        
+      }
+    })
+    .catch((err) => {
+      callback(null, err.message || err);
+    });
+};
+export const uploadImage = (file: File[], email: string,  proyect:string = "1", callback: (sucess: uploadImageDataResponse[] | null, err :null | string) => void) => {
+  const data = new FormData();
+  file.map((f, id) => {
+    data.append("archivo[" + id + "]", f);
+    return true;
+  });
+
+  data.append("user", "2");
+  data.append("proyect", proyect);
+  data.append("email", email);
+
+  // return;
+  fetch(process.env.NEXT_PUBLIC_URL_APIDASHBOARD + "FileUploaderByEmail.php", {
+    method: "POST",
+    body: data,
+    cache: "no-cache",
+  })
+    .then((response) => response.json())
+    .then((res) => {
+      if (res.code === "0") {
+        callback(res.data, null);
+      } else {
+        callback(null, res.data);
       }
     })
     .catch((err) => {

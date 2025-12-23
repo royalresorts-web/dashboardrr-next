@@ -3,30 +3,34 @@ import { UserType } from '@/Context'
 import React, { useState } from 'react'
 import PhotoImg from "../../img/image.png";
 import CopyIcon from "../../img/copy-icon.png";
-import { ImageUploadedType } from './image.dataset';
 import { showToast } from 'nextjs-toast-notify'
 import { ImagePreview } from "@/Components"
 import { Button } from '../ui/button';
+import { uploadImageDataResponse, uploadImage } from '@/lib';
+import Image from 'next/image';
+
+
 
 type ModernNavigator = Navigator & {
     share?: (data: ShareData) => Promise<void>;
 };
 interface ImageUploaderProps {
-    // user: UserType,
-    // logout: () => Promise<void>,
-    // setLoading: React.Dispatch<React.SetStateAction<boolean>>,
+    user: UserType,
+    logout: () => Promise<void>,
+    setLoading: React.Dispatch<React.SetStateAction<boolean>>,
+    proyect: string,
     // update: boolean,
     // setUpdate: React.Dispatch<React.SetStateAction<boolean>>
 }
-const Imageuploader: React.FC<ImageUploaderProps> = () => {
+const Imageuploader: React.FC<ImageUploaderProps> = ({user, setLoading, logout, proyect}) => {
     const [File, setFile] = useState<File[]>([]);
-    const [FileUploadResult, setFileUploadResult] = useState<ImageUploadedType[] | null>(null);
+    const [FileUploadResult, setFileUploadResult] = useState<uploadImageDataResponse[] | null>(null);
     const [viewPreview, setViewPreview] = useState([]);
 
     const renderImagesPreview = () => {
 
-        const renderImagesPreview = Object.keys(File).map((fID, index) => {
-            let f = File[parseInt(fID)];
+        const renderImagesPreview = Object.keys(File).map((fID) => {
+            const f = File[parseInt(fID)];
             //   return <ImagePreview key={fID} file={f} />;
             return <ImagePreview key={fID} file={f} tipo='img' />;
         });
@@ -41,9 +45,8 @@ const Imageuploader: React.FC<ImageUploaderProps> = () => {
     };
 
     const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-        console.log(event.currentTarget.files);
         
-        let tempFiles: File[] = [];
+        const tempFiles: File[] = [];
         setFileUploadResult(null);
         setViewPreview([]);
         
@@ -173,10 +176,10 @@ const Imageuploader: React.FC<ImageUploaderProps> = () => {
                             disabled={true}
                             value={fileURL.url}
                         />
-                        <img
+                        <Image
                             onClick={copyHandler}
                             data-url={fileURL.url}
-                            width="30"
+                            width={30}
                             src={CopyIcon.src}
                             alt="Copy_Icon"
                         />
@@ -186,6 +189,61 @@ const Imageuploader: React.FC<ImageUploaderProps> = () => {
         });
     };
 
+    const clickSubmitImage = () => {
+        if(!user) return; 
+        setLoading(true);
+        user.getIdToken().then(() => {
+            uploadImage(File, user.email!, proyect, (data, err) => {
+                console.log(data);
+                
+            setTimeout(() => {
+                setLoading(false);
+                if (!err) {
+                    setFileUploadResult(data);
+                    data!.map((imgR) => {
+                        if (imgR.code === "0") {
+                        showToast.success("Agregado Exitoso : " + imgR.file, {
+                            duration: 4000,
+                            progress: true,
+                            position: "top-right",
+                            transition: "bounceIn",
+                            icon: '',
+                            sound: true,
+                        });                        
+                        //TODO: aqui se actualiza no se que del file history
+                        // setTrigger(!trigger);
+                        } else{
+                            showToast.error((imgR.description || "Error :") + " : " + imgR.file, {
+                                duration: 4000,
+                                progress: true,
+                                position: "top-right",
+                                transition: "bounceIn",
+                                icon: '',
+                                sound: true,
+                            });
+                        }   
+                        return true;
+                    });
+                } else {
+                    showToast.error(err, {
+                        duration: 4000,
+                        progress: true,
+                        position: "top-right",
+                        transition: "bounceIn",
+                        icon: '',
+                        sound: true,
+                    });
+                }
+            }, 2000);
+        });
+        })
+        .catch(() => {
+            setLoading(false);
+            logout();
+        });
+
+    };
+
     return (
         <>
             {/* <h1 className='text-4xl text-center py-3 font-bold text-blue-rr'>Image Manager</h1> */}
@@ -193,7 +251,7 @@ const Imageuploader: React.FC<ImageUploaderProps> = () => {
                 <div className="dataForm w-[100%]  md:w-125 h-30 relative">
                     <label htmlFor="image" className='text-center text-xl font-bold flex flex-col justify-center items-center w-full h-full absolute top-0 left-0 bottom-0 right-0 border-3 border-dashed border-gray-800'>
                         Arrastre o presione para agregar imagenes
-                        <img width="30px" height="30px" src={PhotoImg.src} alt="photo_icon" />
+                        <Image width={30} height={30} src={PhotoImg.src} alt="photo_icon" />
                     </label>
                     <input className='absolute top-0 left-0 w-full h-25 opacity-0 cursor-pointer appearance-auto ' onChange={handleFileSelect} id="image" multiple type="file" />
 
@@ -217,8 +275,7 @@ const Imageuploader: React.FC<ImageUploaderProps> = () => {
                 {viewPreview && File.length > 0 ? (
                     <div className="dataForm actionsUpload ">
                         <Button variant="destructive" size="lg" onClick={() => setFile([])} className='cursor-pointer mr-2' >Clear</Button>
-                        <Button variant="outline" size="lg" className='bg-blue-rr text-white cursor-pointer'>Subir</Button>
-                        {/* <input onClick={clickSubmitImage} type="submit" value="subir" /> */}
+                        <Button onClick={clickSubmitImage} variant="outline" size="lg" className='bg-blue-rr text-white cursor-pointer'>Subir</Button>
                     </div>
                 ) : (
                     ""
@@ -229,4 +286,6 @@ const Imageuploader: React.FC<ImageUploaderProps> = () => {
 }
 
 export { Imageuploader }
+
+
 

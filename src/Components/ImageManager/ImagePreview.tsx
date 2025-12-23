@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import Image from "next/image";
 
 interface ImagePreviewProps {
     file: File,
@@ -11,7 +12,7 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({ file, tipo }) => {
 
 
     useEffect(() => {
-        var reader = new FileReader();
+        const reader = new FileReader();
         reader.onload = function (event) {
             if (event.target) {
                 setPreview(event.target.result);
@@ -24,7 +25,7 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({ file, tipo }) => {
 
     return (
         <div className="flex flex-col w-40 flex-shrink-0 bg-white border rounded-lg p-2 shadow-sm">
-            {preview && tipo == "img" ? <img className="w-full" src={preview as string} alt="preview" /> : ""}
+            {preview && tipo == "img" ? <Image className="w-full" src={preview as string} alt="preview" /> : ""}
             <p className="description">
                 <strong>Nombre:</strong> {file?.name} <br />
                 <strong>Type:</strong> {file?.type} <br />

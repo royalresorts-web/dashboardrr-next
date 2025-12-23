@@ -11,18 +11,24 @@ export type filter = {
   state: "TODOS" | "ACEPTADO" | "ENVIADO", 
   page: number | 1
 }
+const LoadingDisclaimer = dynamic(() => import('@/Components/disclaimer/loaderCertificates').then((mod) => mod.LoadingDisclaimer),{
+  // Optional: Show a loading message while the component chunk is fetched
+  ssr: false, // This is the key
+  loading: () => <p>...</p>,
+});
 
 
 
 export default function Page() {
   const { user, logout} = useAuth();
-  const { userConfig, userProyects, errorConfig } = useUserConfig();
+  const [disclaimerLoading, setDisclaimerLoading] = useState(false);
+  const { userProyects } = useUserConfig();
     const [proyect, setProyect] = useState<string>("1");
   console.log(proyect);
 
   const renderProyects = () => {
     if (!userProyects?.length) return [];
-    let selectOptions: React.ReactElement[] = [];
+    const selectOptions: React.ReactElement[] = [];
     const uniqueItemsMap = new Map();
     userProyects.forEach(item => {
         const key = `${item.ID}-${item.Name}`;
@@ -42,29 +48,34 @@ export default function Page() {
   };
   
   return (
-    <div className="w-full h-[calc(100vh-56px)] p-2 ">
-      <div className="actions p-2 w-full flex justify-end items-end bg-blue-rr text-white">
-        <div className="proyectSelector">
-          <span>Proyecto</span>
-          <select
-            className="text-blue-rr bg-white ms-2 border rounded text-[16px]"
-            onChange={(e) =>{              
-              const proyect: UserProyectsType | undefined = userProyects?.filter(
-                (p) => p.ID === e.target.value
-              )[0]
-              if(proyect){
-                setProyect(e.target.value);
+    <>
+     <LoadingDisclaimer disclaimerLoading={disclaimerLoading} />  
+      <div className="w-full h-[calc(100vh-56px)] p-2 ">
+        <div className="actions p-2 w-full flex justify-end items-end bg-blue-rr text-white">
+          <div className="proyectSelector">
+            <span>Proyecto</span>
+            <select
+              className="text-blue-rr bg-white ms-2 border rounded text-[16px]"
+              onChange={(e) =>{              
+                const proyect: UserProyectsType | undefined = userProyects?.filter(
+                  (p) => p.ID === e.target.value
+                )[0]
+                if(proyect){
+                  setProyect(e.target.value);
+                }
+              }              
               }
-            }              
-            }
-            name="proyect"
-            id="proyect"
-          >
-            {renderProyects()}
-          </select>
+              name="proyect"
+              id="proyect"
+            >
+              {renderProyects()}
+            </select>
+          </div>
         </div>
+        {
+          user ?  <Imageuploader user={user} logout={logout} setLoading={setDisclaimerLoading} proyect={proyect} /> : ""
+        }  
       </div>
-      <Imageuploader />
-    </div>
+    </>
   )
 }

@@ -3,6 +3,7 @@ import { getTokenResponseType, objToSendEmailCertificate } from "./apiSF.dataset
 function getTokeyByServer(callback: (token: string) => void, errorCallback: (err: string) => void) {
   fetch(`${process.env.REACT_APP_APIDW}/CRM/getTokenByServer`, {
     method: "POST",
+    cache: "no-cache",
   })
     .then((res) => res.json())
     .then((response: getTokenResponseType) => {
@@ -19,6 +20,7 @@ function sendEmailForDisclaimer(obj: objToSendEmailCertificate, callback: (succe
   fetch(`${process.env.NEXT_PUBLIC_APIDW}/emails/sendMessage`, {
     method: "POST",
     body: JSON.stringify(obj),
+    cache: "no-cache",
   })
     .then((res) => res.json())
     .then((response) => {

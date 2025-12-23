@@ -4,7 +4,7 @@ import React from "react";
 import Link from "next/link";
 
 export default function Page() {
-    const { userConfig, userProyects, errorConfig } = useUserConfig();
+    const { userConfig, errorConfig } = useUserConfig();
     
    
    let renderModules: React.ReactElement[] = [];
