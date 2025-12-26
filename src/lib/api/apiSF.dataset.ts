@@ -104,4 +104,11 @@ export type uploadImageDataResponse = {
         "idOperation": string,
         "Date": string,
         "description": string | null
-    }    
+    }
+export type serverImageFile = {
+        "ID": string,
+        "Name": string,
+        "Type": string,
+        "link": string,
+        "Proyect": string
+    }           

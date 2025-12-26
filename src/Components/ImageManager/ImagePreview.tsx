@@ -25,7 +25,7 @@ const ImagePreview: React.FC<ImagePreviewProps> = ({ file, tipo }) => {
 
     return (
         <div className="flex flex-col w-40 flex-shrink-0 bg-white border rounded-lg p-2 shadow-sm">
-            {preview && tipo == "img" ? <Image className="w-full" src={preview as string} alt="preview" /> : ""}
+            {preview && tipo == "img" ? <Image className="w-full" width={100} height={100} src={preview as string} alt="preview" /> : ""}
             <p className="description">
                 <strong>Nombre:</strong> {file?.name} <br />
                 <strong>Type:</strong> {file?.type} <br />

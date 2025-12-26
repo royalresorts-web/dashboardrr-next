@@ -8,21 +8,21 @@ import { ImagePreview } from "@/Components"
 import { Button } from '../ui/button';
 import { uploadImageDataResponse, uploadImage } from '@/lib';
 import Image from 'next/image';
+import { Input } from "@/Components/ui/input"
 
 
 
-type ModernNavigator = Navigator & {
-    share?: (data: ShareData) => Promise<void>;
-};
+
 interface ImageUploaderProps {
     user: UserType,
     logout: () => Promise<void>,
     setLoading: React.Dispatch<React.SetStateAction<boolean>>,
     proyect: string,
     // update: boolean,
-    // setUpdate: React.Dispatch<React.SetStateAction<boolean>>
+    updateFiles: React.Dispatch<React.SetStateAction<boolean>>
+    share: (url: string) => void
 }
-const Imageuploader: React.FC<ImageUploaderProps> = ({user, setLoading, logout, proyect}) => {
+const Imageuploader: React.FC<ImageUploaderProps> = ({user, setLoading, logout, proyect, updateFiles, share}) => {
     const [File, setFile] = useState<File[]>([]);
     const [FileUploadResult, setFileUploadResult] = useState<uploadImageDataResponse[] | null>(null);
     const [viewPreview, setViewPreview] = useState([]);
@@ -59,105 +59,11 @@ const Imageuploader: React.FC<ImageUploaderProps> = ({user, setLoading, logout, 
         setFile(tempFiles);
     };
 
-    const handleShareOrCopy = async (
-        url: string
-    ) => {
-        // Use the extended Navigator type
-        const nav = navigator as ModernNavigator;
-        const shareData: ShareData = {
-            title: "Certificates",
-            text: "Royal Resorts",
-            url: url,
-        };
-        try {
-            // 2. Try Modern Share API (Mobile)
-            if (nav.share) {
-                await nav.share(shareData);
-                // Share was successful (or at least the dialog opened)
-                return;
-            }
 
-            // 3. Try Modern Clipboard API (Desktop/Secure Contexts)
-            // We can now safely check clipboard.writeText
-            if (nav.clipboard && nav.clipboard.writeText) {
-                await nav.clipboard.writeText(url);
-                showToast.success("Url Copiada !!!", {
-                    duration: 4000,
-                    progress: true,
-                    position: "top-right",
-                    transition: "bounceIn",
-                    icon: '',
-                    sound: true,
-                });
-                return;
-            }
-
-            // 4. Fallback to Legacy 'execCommand' (Your Original Method)
-            const el = document.createElement("textarea");
-            el.value = url; // Use .value for textareas, not textContent
-            el.setAttribute("readonly", ""); // Set readonly attribute
-            el.style.position = "absolute";
-            el.style.left = "-9999px"; // Move it off-screen
-            el.classList.add(`copy-${url}`); // Add class just in case
-            document.body.appendChild(el);
-
-            el.select(); // Select the text
-            const success = document.execCommand("copy"); // Execute the copy
-
-            document.body.removeChild(el); // IMPORTANT: Clean up the DOM
-
-            if (success) {
-                showToast.success("Url Copiada !!!", {
-                    duration: 4000,
-                    progress: true,
-                    position: "top-right",
-                    transition: "bounceIn",
-                    icon: '',
-                    sound: true,
-                });
-            } else {
-                showToast.error("Hubo un error al intentar copiar la url", {
-                    duration: 4000,
-                    progress: true,
-                    position: "top-right",
-                    transition: "bounceIn",
-                    icon: '',
-                    sound: true,
-                });
-            }
-
-        } catch (err) {
-            // Handle errors from navigator.share (e.g., user cancelled)
-            // or navigator.clipboard.writeText (e.g., permissions denied)
-
-            // Don't show an error if the user just cancelled the share dialog
-            // Check if err is an Error object before accessing .name
-            if (err instanceof Error && err.name !== 'AbortError') {
-                showToast.error("Error: " + err.message, {
-                    duration: 4000,
-                    progress: true,
-                    position: "top-right",
-                    transition: "bounceIn",
-                    icon: '',
-                    sound: true,
-                });
-            } else if (!(err instanceof Error)) {
-                // Handle non-Error throws, just in case
-                showToast.error("Error Inesperado", {
-                    duration: 4000,
-                    progress: true,
-                    position: "top-right",
-                    transition: "bounceIn",
-                    icon: '',
-                    sound: true,
-                });
-            }
-        }
-    }
     function copyHandler(e: React.MouseEvent<HTMLImageElement>): void {
         const url = e.currentTarget.dataset.url;
         if (url) {
-            handleShareOrCopy(url);
+            share(url);
         }
     }
 
@@ -166,10 +72,10 @@ const Imageuploader: React.FC<ImageUploaderProps> = ({user, setLoading, logout, 
 
         return FileUploadResult.map((fileURL, idUrl) => {
             return (
-                <div key={idUrl} className="urlResult">
-                    <label htmlFor="">{fileURL.file}</label>
-                    <div className="input">
-                        <input
+                <div key={idUrl} className="urlResult py-1">
+                    <label htmlFor="" className='font-bold'>{fileURL.file}</label>
+                    <div className="input flex flex-row gap-2 items-center w-full">
+                        <Input
                             type="text"
                             id=""
                             onChange={() => { }}
@@ -180,6 +86,8 @@ const Imageuploader: React.FC<ImageUploaderProps> = ({user, setLoading, logout, 
                             onClick={copyHandler}
                             data-url={fileURL.url}
                             width={30}
+                            height={30}
+                            className='cursor-pointer'
                             src={CopyIcon.src}
                             alt="Copy_Icon"
                         />
@@ -193,54 +101,52 @@ const Imageuploader: React.FC<ImageUploaderProps> = ({user, setLoading, logout, 
         if(!user) return; 
         setLoading(true);
         user.getIdToken().then(() => {
-            uploadImage(File, user.email!, proyect, (data, err) => {
-                console.log(data);
-                
-            setTimeout(() => {
-                setLoading(false);
-                if (!err) {
-                    setFileUploadResult(data);
-                    data!.map((imgR) => {
-                        if (imgR.code === "0") {
-                        showToast.success("Agregado Exitoso : " + imgR.file, {
-                            duration: 4000,
-                            progress: true,
-                            position: "top-right",
-                            transition: "bounceIn",
-                            icon: '',
-                            sound: true,
-                        });                        
-                        //TODO: aqui se actualiza no se que del file history
-                        // setTrigger(!trigger);
-                        } else{
-                            showToast.error((imgR.description || "Error :") + " : " + imgR.file, {
+            uploadImage(File, user.email!, proyect, (data, err) => {                
+                setTimeout(() => {
+                    setLoading(false);
+                    if (!err) {
+                        setFileUploadResult(data);
+                        data!.map((imgR) => {
+                            if (imgR.code === "0") {
+                            showToast.success("Agregado Exitoso : " + imgR.file, {
                                 duration: 4000,
                                 progress: true,
                                 position: "top-right",
                                 transition: "bounceIn",
                                 icon: '',
                                 sound: true,
-                            });
-                        }   
-                        return true;
-                    });
-                } else {
-                    showToast.error(err, {
-                        duration: 4000,
-                        progress: true,
-                        position: "top-right",
-                        transition: "bounceIn",
-                        icon: '',
-                        sound: true,
-                    });
-                }
-            }, 2000);
-        });
-        })
-        .catch(() => {
+                            });                         
+                            //TODO: aqui se actualiza no se que del file history
+                            // setTrigger(!trigger);
+                            updateFiles(true);
+                            } else{
+                                showToast.error((imgR.description || "Error :") + " : " + imgR.file, {
+                                    duration: 4000,
+                                    progress: true,
+                                    position: "top-right",
+                                    transition: "bounceIn",
+                                    icon: '',
+                                    sound: true,
+                                });
+                            }   
+                            return true;
+                        });
+                    } else {
+                        showToast.error(err, {
+                            duration: 4000,
+                            progress: true,
+                            position: "top-right",
+                            transition: "bounceIn",
+                            icon: '',
+                            sound: true,
+                        });
+                    }
+                }, 2000);
+            });
+        }).catch(() => {
             setLoading(false);
             logout();
-        });
+        });      
 
     };
 
@@ -258,17 +164,17 @@ const Imageuploader: React.FC<ImageUploaderProps> = ({user, setLoading, logout, 
                 </div>
                 {File.length > 0 ? (
                     <div className="preview w-full md:w-125 md:margins-auto">
-                        <h2>Previews</h2>
-                        <div className="carouselImages w-full overflow-x-auto scrollbar-hide py-4">{renderImagesPreview()}</div>
+                        <h2 className='text-xl mt-2 py-1 w-full bg-blue-rr text-white text-center'>Previews</h2>
+                        <div className="carouselImages w-full overflow-x-auto scrollbar-hide py-2">{renderImagesPreview()}</div>
                     </div>
                 ) : (
                     ""
                 )}
                 {viewPreview && FileUploadResult ? (
-                    <>
-                        <h2>Urls en servidor</h2>
+                    <div className="preview w-full md:w-125 md:margins-auto pb-2">
+                        <h2 className='text-xl mt-2 py-1 w-full bg-blue-rr text-white text-center'>Urls en servidor</h2>
                         {renderUrlResults()}
-                    </>
+                    </div>
                 ) : (
                     ""
                 )}

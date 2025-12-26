@@ -7,7 +7,7 @@ import {
   objToSaveCertificate, 
   uploadFileDataResponse, 
   uploadImageDataResponse,
-  uploadFileResponse } from "./apiSF.dataset";
+  uploadFileResponse} from "./apiSF.dataset";
 import { filter } from "@/app/(routes)/dashboard/disclaimer/page";
 export function getPermissions() {
 }
@@ -250,4 +250,13 @@ export const uploadImage = (file: File[], email: string,  proyect:string = "1", 
     .catch((err) => {
       callback(null, err.message || err);
     });
+};
+export const getFilesByEmail = (mail: string) => {
+  let data = new FormData();
+  data.append("email", mail);
+  return fetch(process.env.NEXT_PUBLIC_URL_APIDASHBOARD + "getFilesByEmail.php", {
+    method: "POST",
+    body: data,
+    cache: "no-cache",
+  });
 };

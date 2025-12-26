@@ -1,3 +1,6 @@
 export * from "./imageuploader"
 export * from "./image.dataset"
 export * from "./ImagePreview"
+export * from "./FileHistory"
+export * from "./filePreview"
+export * from "./DeleteImage"

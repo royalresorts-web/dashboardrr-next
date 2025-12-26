@@ -3,7 +3,8 @@ import { useAuth, UserProyectsType } from "@/Context";
 import React, { useState } from "react";
 import dynamic from 'next/dynamic';
 import { useUserConfig } from "@/Context";
-import { Imageuploader } from "@/Components";
+import { Imageuploader, FileHistory } from "@/Components";
+import { showToast } from "nextjs-toast-notify";
 
 export type filter = {
   folio: string | null,
@@ -16,14 +17,17 @@ const LoadingDisclaimer = dynamic(() => import('@/Components/disclaimer/loaderCe
   ssr: false, // This is the key
   loading: () => <p>...</p>,
 });
-
+type ModernNavigator = Navigator & {
+    share?: (data: ShareData) => Promise<void>;
+};
 
 
 export default function Page() {
   const { user, logout} = useAuth();
   const [disclaimerLoading, setDisclaimerLoading] = useState(false);
   const { userProyects } = useUserConfig();
-    const [proyect, setProyect] = useState<string>("1");
+  const [proyect, setProyect] = useState<string>("1");
+  const [updateFiles, setUpdateFiles] = useState<boolean>(false);
   console.log(proyect);
 
   const renderProyects = () => {
@@ -46,6 +50,102 @@ export default function Page() {
     });
     return selectOptions;
   };
+
+  const handleShareOrCopy = async (
+        url: string
+    ) => {
+        // Use the extended Navigator type
+        const nav = navigator as ModernNavigator;
+        const shareData: ShareData = {
+            title: "Certificates",
+            text: "Royal Resorts",
+            url: url,
+        };
+        try {
+            // 2. Try Modern Share API (Mobile)
+            if (nav.share) {
+                await nav.share(shareData);
+                // Share was successful (or at least the dialog opened)
+                return;
+            }
+
+            // 3. Try Modern Clipboard API (Desktop/Secure Contexts)
+            // We can now safely check clipboard.writeText
+            if (nav.clipboard && nav.clipboard.writeText) {
+                await nav.clipboard.writeText(url);
+                showToast.success("Url Copiada !!!", {
+                    duration: 4000,
+                    progress: true,
+                    position: "top-right",
+                    transition: "bounceIn",
+                    icon: '',
+                    sound: true,
+                });
+                return;
+            }
+
+            // 4. Fallback to Legacy 'execCommand' (Your Original Method)
+            const el = document.createElement("textarea");
+            el.value = url; // Use .value for textareas, not textContent
+            el.setAttribute("readonly", ""); // Set readonly attribute
+            el.style.position = "absolute";
+            el.style.left = "-9999px"; // Move it off-screen
+            el.classList.add(`copy-${url}`); // Add class just in case
+            document.body.appendChild(el);
+
+            el.select(); // Select the text
+            const success = document.execCommand("copy"); // Execute the copy
+
+            document.body.removeChild(el); // IMPORTANT: Clean up the DOM
+
+            if (success) {
+                showToast.success("Url Copiada !!!", {
+                    duration: 4000,
+                    progress: true,
+                    position: "top-right",
+                    transition: "bounceIn",
+                    icon: '',
+                    sound: true,
+                });
+            } else {
+                showToast.error("Hubo un error al intentar copiar la url", {
+                    duration: 4000,
+                    progress: true,
+                    position: "top-right",
+                    transition: "bounceIn",
+                    icon: '',
+                    sound: true,
+                });
+            }
+
+        } catch (err) {
+            // Handle errors from navigator.share (e.g., user cancelled)
+            // or navigator.clipboard.writeText (e.g., permissions denied)
+
+            // Don't show an error if the user just cancelled the share dialog
+            // Check if err is an Error object before accessing .name
+            if (err instanceof Error && err.name !== 'AbortError') {
+                showToast.error("Error: " + err.message, {
+                    duration: 4000,
+                    progress: true,
+                    position: "top-right",
+                    transition: "bounceIn",
+                    icon: '',
+                    sound: true,
+                });
+            } else if (!(err instanceof Error)) {
+                // Handle non-Error throws, just in case
+                showToast.error("Error Inesperado", {
+                    duration: 4000,
+                    progress: true,
+                    position: "top-right",
+                    transition: "bounceIn",
+                    icon: '',
+                    sound: true,
+                });
+            }
+        }
+    }
   
   return (
     <>
@@ -73,8 +173,11 @@ export default function Page() {
           </div>
         </div>
         {
-          user ?  <Imageuploader user={user} logout={logout} setLoading={setDisclaimerLoading} proyect={proyect} /> : ""
-        }  
+          user ?  <Imageuploader share={handleShareOrCopy} updateFiles={setUpdateFiles} user={user} logout={logout} setLoading={setDisclaimerLoading} proyect={proyect} /> : ""
+        } 
+        {
+          user ? <FileHistory user={user} share={handleShareOrCopy} proyect={proyect} update={updateFiles} updateFiles={setUpdateFiles} email={user.email!} /> : ""
+        }
       </div>
     </>
   )
