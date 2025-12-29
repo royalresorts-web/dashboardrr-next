@@ -1,23 +1,22 @@
 "use client"
-import { UserType } from '@/Context'
 import React, { FC } from 'react'
-import { certificateType } from './dataset'
 import { Button } from '../ui/button'
 import { Trash2 } from 'lucide-react'
 import { Dialog, DialogContent, DialogTitle, DialogFooter, DialogHeader, DialogDescription } from '../ui/dialog'
-import { objToSaveCertificate } from '@/lib'
 
 interface DeleteImageProps {
     id: string,
     open: boolean, 
     setUpdate: React.Dispatch<React.SetStateAction<boolean>>
-    onOpenChange: React.Dispatch<React.SetStateAction<boolean>>
+    onOpenChange: React.Dispatch<React.SetStateAction<boolean>>,
+    deleteHandler: (id: string) => void,
 }
 
-export const DeleteImage: FC<DeleteImageProps> = ({ id, open, setUpdate, onOpenChange}: DeleteImageProps) => {
+export const DeleteImage: FC<DeleteImageProps> = ({ id, open, onOpenChange, deleteHandler}: DeleteImageProps) => {
 
     const deleteImage = ()=>{
-        
+        deleteHandler(id);
+        console.log("aqui si");        
     }   
     
     return (

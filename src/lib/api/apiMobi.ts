@@ -260,3 +260,27 @@ export const getFilesByEmail = (mail: string) => {
     cache: "no-cache",
   });
 };
+
+export const  deleteImageFromImageUploader = (id: string, email: string, callback : (succes: boolean, err: string | null) => void ) => {
+  fetch(
+    process.env.NEXT_PUBLIC_URL_APIDASHBOARD +
+    "imagemanager/deleteImage.php?email=" +
+    email +
+    "&imageID=" +
+    id,
+    {
+      method: "GET",
+    }
+  )
+    .then((res) => res.json())
+    .then((response) => {
+      if (response.code === 0 || response.code === "0") {
+        callback(true, null);
+      } else {
+        callback(false, null);
+      }
+    })
+    .catch((err) => {
+      callback(false, err.message ? err.message : err);
+    });
+}

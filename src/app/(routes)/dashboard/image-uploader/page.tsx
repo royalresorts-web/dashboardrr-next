@@ -156,6 +156,7 @@ export default function Page() {
             <span>Proyecto</span>
             <select
               className="text-blue-rr bg-white ms-2 border rounded text-[16px]"
+              value={proyect}
               onChange={(e) =>{              
                 const proyect: UserProyectsType | undefined = userProyects?.filter(
                   (p) => p.ID === e.target.value
@@ -176,7 +177,7 @@ export default function Page() {
           user ?  <Imageuploader share={handleShareOrCopy} updateFiles={setUpdateFiles} user={user} logout={logout} setLoading={setDisclaimerLoading} proyect={proyect} /> : ""
         } 
         {
-          user ? <FileHistory user={user} share={handleShareOrCopy} proyect={proyect} update={updateFiles} updateFiles={setUpdateFiles} email={user.email!} /> : ""
+          user ? <FileHistory user={user} share={handleShareOrCopy} proyect={proyect} update={updateFiles} updateFiles={setUpdateFiles}  setLoading={setDisclaimerLoading} email={user.email!} /> : ""
         }
       </div>
     </>
