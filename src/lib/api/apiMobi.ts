@@ -252,7 +252,7 @@ export const uploadImage = (file: File[], email: string,  proyect:string = "1", 
     });
 };
 export const getFilesByEmail = (mail: string) => {
-  let data = new FormData();
+  const data = new FormData();
   data.append("email", mail);
   return fetch(process.env.NEXT_PUBLIC_URL_APIDASHBOARD + "getFilesByEmail.php", {
     method: "POST",

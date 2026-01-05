@@ -41,7 +41,7 @@ const FilePreview: React.FC<FilePreviewProps> = ({
         />
         <Image
           className="deleteImage absolute top-1 left-1 cursor-pointer"
-          onClick={(e) => setPreview(true)}
+          onClick={() => setPreview(true)}
           data-url={url}
           width={30}
           height={30}

@@ -1,10 +1,8 @@
 "use client"
-import { UserType } from '@/Context'
 import React, { FC } from 'react'
 import { Button } from '../ui/button'
-import { Trash2 } from 'lucide-react'
 import { Dialog, DialogContent, DialogTitle, DialogFooter, DialogHeader, DialogDescription } from '../ui/dialog'
-import { objToSaveCertificate } from '@/lib'
+
 import Image from 'next/image'
 
 interface ImageInfoProps {
@@ -16,11 +14,8 @@ interface ImageInfoProps {
     name: string
 }
 
-export const ImageInfo: FC<ImageInfoProps> = ({ id, open, setUpdate, onOpenChange, url, name}: ImageInfoProps) => {
+export const ImageInfo: FC<ImageInfoProps> = ({ open, onOpenChange, url, name}: ImageInfoProps) => {
 
-    const ImageInfo = ()=>{
-        
-    }   
     
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>

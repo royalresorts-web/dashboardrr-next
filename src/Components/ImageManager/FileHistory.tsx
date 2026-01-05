@@ -1,11 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import { useFilesByEmail } from "@/Hooks";
 import { FilePreview } from "..";
 import { UserType } from "@/Context";
 import { Button } from "../ui/button";
 import { deleteImageFromImageUploader } from "@/lib";
+import { showToast } from "nextjs-toast-notify";
 
 interface FileHistoryProps {
   email: string,
@@ -25,9 +25,9 @@ const FileHistory: React.FC<FileHistoryProps> = ({ user, update, updateFiles, em
       fetchFiles(email);
       updateFiles(false);
     }
-  }, [update, fetchFiles, updateFiles]);
+  }, [update, fetchFiles, updateFiles, email]);
 
-  const getNumberOfFiles = files.filter((f, id) => {
+  const getNumberOfFiles = files.filter((f) => {
     return f.Proyect === proyect;
   }).length;
 
@@ -38,13 +38,22 @@ const FileHistory: React.FC<FileHistoryProps> = ({ user, update, updateFiles, em
     }
   }
   const deleteImage = (imageID: string) => {
-    let emailUser = user.email;
-    console.log(user.uid);
-    
+    const emailUser = user.email;
+
     setLoading(true)
     deleteImageFromImageUploader(imageID, emailUser!, (success, error) => {
         if (success) {
             fetchFiles(email);
+        }
+        if(error){
+          showToast.error("Error eliminando imagen con ID: " + imageID + " - " + (error || ""), {
+                          duration: 4000,
+                          progress: true,
+                          position: "top-right",
+                          transition: "bounceIn",
+                          icon: '',
+                          sound: true,
+                        });
         }
         setLoading(false)
     });
@@ -52,7 +61,7 @@ const FileHistory: React.FC<FileHistoryProps> = ({ user, update, updateFiles, em
 
 
   const renderImages = files
-    .filter((f, id) => {
+    .filter((f) => {
       return f.Proyect === proyect.toString();
     })
     .sort((a, b) => {
@@ -85,7 +94,7 @@ const FileHistory: React.FC<FileHistoryProps> = ({ user, update, updateFiles, em
           <Button
             className="bg-blue-rr text-white cursor-pointer"
             variant={"outline"}
-            onClick={(e) => {
+            onClick={() => {
               if (number + numberFilesPerPage < getNumberOfFiles)
                 setNumber(number + numberFilesPerPage);
               else setNumber(getNumberOfFiles - 1);
