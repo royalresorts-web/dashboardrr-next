@@ -23,11 +23,13 @@ export const ImageInfo: FC<ImageInfoProps> = ({ open, onOpenChange, url, name}: 
                 <DialogHeader>
                     <DialogTitle></DialogTitle>
                     <DialogDescription>
-                        <Image style={{
-                        width: 'auto',   // Allows the width to be determined by the 'width' prop
-                        height: 'auto',  // Maintains aspect ratio
-                        maxWidth: '100%', // Ensures it doesn't overflow its container
-                        }} src={url} alt={name} width={700} height={500} />
+                        
+                            <Image className='max-h-[80vh] object-top object-contain md:object-cover' style={{
+                                width: '100%',   // Allows the width to be determined by the 'width' prop
+                                height: 'auto',  // Maintains aspect ratio
+                                maxWidth: '100%', // Ensures it doesn't overflow its container
+                                }} src={url} alt={name} width={700} height={500} />
+                                               
                     </DialogDescription>
                 </DialogHeader>
                 <DialogFooter>
