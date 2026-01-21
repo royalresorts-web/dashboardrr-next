@@ -4,7 +4,8 @@ import CopyIcon from "../../img/copy-icon.png";
 import DeleteIcon from "../../img/delete.png";
 import BreakImage from "../../img/custom_break.png";
 import { useState } from "react";
-import { DeleteImage, ImageInfo} from "..";
+import { DeleteImage } from "./DeleteImage";
+import { ImageInfo } from "./ImageInfo";
 
 interface FilePreviewProps {
   id: string,
@@ -40,7 +41,7 @@ const FilePreview: React.FC<FilePreviewProps> = ({
           width={200} 
           height={150} 
           src={imgUrl} 
-          alt="preview" />
+          alt="preview image" />
         <Image
           className="copyUrl absolute top-1 p-1 right-1 cursor-pointer rounded-full bg-white shadow-sm shadow-gray-400"
           onClick={copyHandler}
