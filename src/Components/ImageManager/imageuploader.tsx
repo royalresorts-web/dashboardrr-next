@@ -4,13 +4,11 @@ import React, { useState } from 'react'
 import PhotoImg from "../../img/image.png";
 import CopyIcon from "../../img/copy-icon.png";
 import { showToast } from 'nextjs-toast-notify'
-import { ImagePreview } from "@/Components"
+import { ImagePreview } from "./ImagePreview"
 import { Button } from '../ui/button';
 import { uploadImageDataResponse, uploadImage } from '@/lib';
 import Image from 'next/image';
 import { Input } from "@/Components/ui/input"
-
-
 
 
 interface ImageUploaderProps {
@@ -56,7 +54,7 @@ const Imageuploader: React.FC<ImageUploaderProps> = ({user, setLoading, logout, 
             });
             event.target.value = "";
         }
-        setFile(tempFiles);
+        setFile(tempFiles); 
     };
 
 

@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen, fireEvent, within } from '@testing-library/react'
 import {FilePreview} from './filePreview';
 import React from 'react'; // Import React to use its types
 
@@ -46,11 +46,18 @@ describe('Image previewer component', () => {
     it('Checking if the preview modal is working', async ()=>{
         render(<FilePreview id="2" type='ss' url={urlImage} name='Mi image' copyHandler={handleCopy} deleteHandler={handleDelete} updateFiles={()=>{}} />);
         
-        fireEvent.click(screen.getByAltText(/preview image/i) as HTMLImageElement);
+        fireEvent.click(screen.getByAltText(/preview image mi image/i) as HTMLImageElement);
         
-        // Use findByAltText to wait for the modal content
-        const infoModal = await screen.findByAltText(/mi image/i);
+        // Wait for the modal dialog to appear (it has role="dialog")
+        const dialog = await screen.findByRole('dialog');
+        expect(dialog).toBeInTheDocument();
 
-        expect(infoModal).toBeInTheDocument();
+        // Now, use `within` to scope the search to the dialog and find the image with the exact alt text
+        const infoModalImage = await within(dialog).findByAltText('Mi image');
+        expect(infoModalImage).toBeInTheDocument();
+
+        // Optionally, you can also check for the close button within the dialog
+        const closeButton = await within(dialog).findByRole('button', { name: /cerrar/i });
+        expect(closeButton).toBeInTheDocument();
     });
 })

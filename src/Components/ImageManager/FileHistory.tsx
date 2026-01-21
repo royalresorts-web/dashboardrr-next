@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useFilesByEmail } from "@/Hooks";
-import { FilePreview } from "..";
+import { FilePreview } from "./filePreview";
 import { UserType } from "@/Context";
 import { Button } from "../ui/button";
 import { deleteImageFromImageUploader } from "@/lib";
@@ -72,8 +72,8 @@ const FileHistory: React.FC<FileHistoryProps> = ({ user, update, updateFiles, em
       return (
         <FilePreview
           copyHandler={copyHandler}
-          id={file.ID}
-          key={file.ID + id}
+          id={file.ID} // The 'id' prop for the component is fine
+          key={file.ID}
           name={file.Name}
           type={file.Type}
           url={file.link}

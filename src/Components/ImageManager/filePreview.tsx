@@ -41,7 +41,7 @@ const FilePreview: React.FC<FilePreviewProps> = ({
           width={200} 
           height={150} 
           src={imgUrl} 
-          alt="preview image" />
+          alt={"preview image " + name} />
         <Image
           className="copyUrl absolute top-1 p-1 right-1 cursor-pointer rounded-full bg-white shadow-sm shadow-gray-400"
           onClick={copyHandler}
