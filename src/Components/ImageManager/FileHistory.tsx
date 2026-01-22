@@ -68,7 +68,7 @@ const FileHistory: React.FC<FileHistoryProps> = ({ user, update, updateFiles, em
       return parseInt(b.ID) - parseInt(a.ID);
     })
     .filter((f, id) => id <= number)
-    .map((file, id) => {
+    .map((file) => {
       return (
         <FilePreview
           copyHandler={copyHandler}

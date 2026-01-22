@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import { ImagePreview } from './ImagePreview';
 import React from 'react'; // Import React to use its types
 

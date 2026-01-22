@@ -37,8 +37,7 @@ const CertificateFinder: React.FC<CertificateFinderProps> = ({ user,logout, setL
                             setError("")
                         }
                     });
-                }).catch(err => {
-                    console.log(err);
+                }).catch(() => {
                     setLoading(false);
                     logout();
                 });

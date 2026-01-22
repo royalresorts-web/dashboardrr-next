@@ -109,7 +109,7 @@ const LoadFileRecord: React.FC<LoadFileRecordProps> = ({cert,user, setLoading, h
                             <span className='text-blue-rr'>{File[0].name}</span>
                         </div>
                         <div className='w-[100%] lg:w-[49%] flex flex-row justify-center items-center gap-2'>
-                            <Button onClick={e => {console.log(e.target); uploadPDFToDB()}} variant={"outline"} className='cursor-pointer'>
+                            <Button onClick={uploadPDFToDB} variant={"outline"} className='cursor-pointer'>
                                 <FileUp className='text-blue-rr' /> Subir
                             </Button>
 
@@ -130,4 +130,3 @@ const LoadFileRecord: React.FC<LoadFileRecordProps> = ({cert,user, setLoading, h
     )
 }
 export { LoadFileRecord }
-

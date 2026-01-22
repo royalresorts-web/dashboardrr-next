@@ -6,9 +6,9 @@ import PDF from "../../img/pdf-svg.svg"
 
 import { Button } from '../ui/button'
 import { Copy, Trash } from 'lucide-react'
-import { Dialog, DialogContent, DialogTitle, DialogFooter, DialogHeader } from '../ui/dialog'
+import { Dialog, DialogContent, DialogTitle, DialogFooter, DialogHeader, DialogDescription } from '../ui/dialog'
 import { objToSaveCertificate } from '@/lib'
-import {LoadFileRecord} from '@/Components'
+import {LoadFileRecord} from './LoadFileRecord'
 import Image from 'next/image'
 import { showToast } from 'nextjs-toast-notify'
 
@@ -50,6 +50,7 @@ export const RecordAddFile: FC<RecordAddFileProps> = ({ user, cert, handleStatus
             window.open(file, `certificate-${cert.folio}-${cert.email}`, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=' + w + ', height=' + h + ', top=' + y + ', left=' + x);
         }
     }
+
     const handleShareOrCopy = async (
         url: string,
         record: certificateType
@@ -119,9 +120,6 @@ export const RecordAddFile: FC<RecordAddFileProps> = ({ user, cert, handleStatus
             }
 
         } catch (err) {
-            // Handle errors from navigator.share (e.g., user cancelled)
-            // or navigator.clipboard.writeText (e.g., permissions denied)
-            
             // Don't show an error if the user just cancelled the share dialog
             // Check if err is an Error object before accessing .name
             if (err instanceof Error && err.name !== 'AbortError') {
@@ -175,6 +173,9 @@ export const RecordAddFile: FC<RecordAddFileProps> = ({ user, cert, handleStatus
                         <span>{cert.folio}</span>
                         <span>{cert.email}</span>
                     </DialogTitle>
+                    <DialogDescription>
+                        Certificate info for this record.
+                    </DialogDescription>
                 </DialogHeader>
                 <div className='w-full flex flex-col gap-2'>
                     <div className="information flex flex-row justify-between items-center gap-2">
@@ -186,20 +187,19 @@ export const RecordAddFile: FC<RecordAddFileProps> = ({ user, cert, handleStatus
                         </div>
                     </div>               
                     {cert.url_file == "" ? (
-                        <LoadFileRecord setLoading={setLoading} user={user} cert={cert} folio={cert.folio} idFolio={cert.id} handleStatus={handleStatus} />
-                    ): 
-                    (
+                        <div data-testid="thereisno-file-certificate">
+                            <LoadFileRecord setLoading={setLoading} user={user} cert={cert} folio={cert.folio} idFolio={cert.id} handleStatus={handleStatus} />
+                        </div>
+                    ) : (
                         <div className='w-full py-4'>
                             <h3 className='font-bold text-blue-rr'>Hay un archivo cargado para este registro</h3>
                             <Image onClick={e=> {console.log(e); showFile(cert.url_file)} } src={PDF} width={40} className='mt-3 cursor-pointer' height={40} alt='PDF File' />
                             <div className='w-full flex justify-start items-center py-4 gap-3'>
-                                <Trash onClick={deleteFile} strokeWidth={2.5} size={30} className='text-red-800 cursor-pointer' />
-                                <Copy onClick={shareUrl} strokeWidth={2.5} size={30} color='#00467f' className='cursor-pointer'/>
+                                <Trash data-testid='remove-file-button'  onClick={deleteFile} strokeWidth={2.5} size={30} className='text-red-800 cursor-pointer' />
+                                <Copy data-testid='copy-file-button' onClick={shareUrl} strokeWidth={2.5} size={30} color='#00467f' className='cursor-pointer'/>
                             </div>
                         </div>
                     )}
-
-
                 </div>
                 <DialogFooter>
                     <Button variant="outline" className=' cursor-pointer ' onClick={() => {onOpenChange(false) }}>Cancelar</Button>

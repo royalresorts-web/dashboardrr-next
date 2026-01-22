@@ -2,6 +2,7 @@ import { render, screen, fireEvent, within } from '@testing-library/react'
 import { FileHistory } from './FileHistory';
 import React from 'react';
 import { UserType } from '@/Context'; // Assuming UserType is correctly imported
+import { useFilesByEmail } from '@/Hooks';
 
 // Mock the useFilesByEmail custom hook
 const mockFiles = [
@@ -33,13 +34,13 @@ describe('FileHistory component', () => {
     }
 
     // Import the mocked hook to reset its behavior before each test
-    const { useFilesByEmail } = require('@/Hooks');
+    // const { useFilesByEmail } = require('@/Hooks');
 
     it('renders images filtered by project inside files_wrapper', async () => {  
       const currentProyect = '1';
 
       // Ensure the mock returns the expected data for this test
-      useFilesByEmail.mockReturnValue({ files: mockFiles, fetchFiles: mockFetchFiles });
+      (useFilesByEmail as jest.Mock).mockReturnValue({ files: mockFiles, fetchFiles: mockFetchFiles });
       const { container } = render(<FileHistory email={user.email!} proyect={currentProyect} update={false} updateFiles={()=>{}} share={()=>{}} user={user} setLoading={()=>{}} />);
       
       // Find the div with the class "files_wrapper" using querySelector
@@ -63,7 +64,7 @@ describe('FileHistory component', () => {
         const share = jest.fn();
         const currentProyect = '99'; // A project with no matching files
         
-        useFilesByEmail.mockReturnValue({ files: mockFiles, fetchFiles: mockFetchFiles });
+        (useFilesByEmail as jest.Mock).mockReturnValue({ files: mockFiles, fetchFiles: mockFetchFiles });
         const { container } = render(<FileHistory email={user.email!} proyect={currentProyect} update={false} updateFiles={()=>{}} share={share} user={user} setLoading={()=>{}} />);
         
         const filesWrapper = container.querySelector('.files_wrapper');
@@ -91,7 +92,7 @@ describe('FileHistory component', () => {
         // Sort by ID descending as in FileHistory.tsx (e.g., 18, 17, ..., 1)
         const extendedMockFilesForProject1 = allMockFilesForProject1.sort((a, b) => parseInt(b.ID) - parseInt(a.ID));
 
-        useFilesByEmail.mockReturnValue({ files: extendedMockFilesForProject1, fetchFiles: mockFetchFiles });
+        (useFilesByEmail as jest.Mock).mockReturnValue({ files: extendedMockFilesForProject1, fetchFiles: mockFetchFiles });
         const { container } = render(<FileHistory email={user.email!} proyect={currentProyect} update={false} updateFiles={()=>{}} share={share} user={user} setLoading={()=>{}} />);
 
         const filesWrapper = container.querySelector('.files_wrapper');
