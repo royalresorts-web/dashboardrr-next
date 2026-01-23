@@ -13,7 +13,9 @@ import {
 import { UserType } from '@/Context'
 import { Ellipsis, Trash2 } from 'lucide-react'
 import { certificateType } from './dataset'
-import { DeleteRecord, RecordChangeStatus, RecordAddFile } from '@/Components';
+import { DeleteRecord} from './DeleteRecord';
+import {RecordAddFile } from './AddFileToRecord';
+import { RecordChangeStatus } from './RecordChangeStatus';
 import { objToSaveCertificate, setInfoCertificate,  } from '@/lib';
 import { showToast } from 'nextjs-toast-notify';
 

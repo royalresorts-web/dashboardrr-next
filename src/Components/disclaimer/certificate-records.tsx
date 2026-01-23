@@ -4,7 +4,9 @@ import { UserType } from "@/Context";
 import React, { useEffect, useState } from "react";
 import { certificateType } from "./dataset";
 import { fetchCertificates, getUrlForCertificatesExport } from "@/lib";
-import { Pagination, RecordDropdownMenu } from "@/Components";
+import { RecordDropdownMenu } from "./recordDropdownMenu";
+import { Pagination } from "./paginationRecords";
+
 import { filter } from "@/app/(routes)/dashboard/disclaimer/page";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";

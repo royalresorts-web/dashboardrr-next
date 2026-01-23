@@ -24,9 +24,7 @@ const CertificateFinder: React.FC<CertificateFinderProps> = ({ user,logout, setL
         if (folio.length !== 0) {
             setLoading(true)
             user.getIdToken()
-                .then(res => {
-                    
-                    console.log(res);                    
+                .then(res => {                  
                     fetchCertificateByFolio(folio, res, (record, err) => {
                         setLoading(false)                        
                         if(err){
